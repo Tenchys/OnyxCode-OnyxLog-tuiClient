@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 from pathlib import Path
+from uuid import uuid4
 
 import aiosqlite
 
@@ -38,7 +39,7 @@ async def init_db(db_path: str | None = None) -> None:
 
 
 async def store_key(
-    id: str,
+    id: str | None,
     name: str,
     key: str,
     key_type: str,
@@ -50,15 +51,37 @@ async def store_key(
 ) -> None:
     resolved_path = await _get_db_path(db_path)
     Path(resolved_path).parent.mkdir(parents=True, exist_ok=True)
+    key_id = id or str(uuid4())
     created_at = datetime.now(UTC).isoformat()
     async with aiosqlite.connect(resolved_path) as db:
         await db.execute(
             """
             INSERT INTO api_keys
-            (id, name, key, key_type, role, user_id, app_id, server_url, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, name, key, key_type, role, user_id, app_id, server_url, created_at,
+             is_active)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+            ON CONFLICT(id) DO UPDATE SET
+                name = excluded.name,
+                key = excluded.key,
+                key_type = excluded.key_type,
+                role = excluded.role,
+                user_id = excluded.user_id,
+                app_id = excluded.app_id,
+                server_url = excluded.server_url,
+                created_at = excluded.created_at,
+                is_active = 1
             """,
-            (id, name, key, key_type, role, user_id, app_id, server_url, created_at),
+            (
+                key_id,
+                name,
+                key,
+                key_type,
+                role,
+                user_id,
+                app_id,
+                server_url,
+                created_at,
+            ),
         )
         await db.commit()
 

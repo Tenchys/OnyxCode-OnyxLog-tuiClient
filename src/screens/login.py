@@ -74,7 +74,7 @@ class LoginScreen(Screen):
             client.set_api_key(api_key)
 
             await db.store_key(
-                id=result.get_key_id() or "unknown",
+                id=result.get_key_id(),
                 name=f"{username}-key",
                 key=api_key,
                 key_type="user",
