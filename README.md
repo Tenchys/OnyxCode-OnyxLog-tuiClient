@@ -479,6 +479,51 @@ Stats are loaded on mount using `GET /api/v1/stats/overview`. If the server is u
 └─────────────────────────────────────────────┘
 ```
 
+## Applications Screen
+
+The `ApplicationsScreen` provides application management from the TUI using a
+`DataTable` and modal dialogs.
+
+### Table Columns
+
+- Name
+- App ID
+- Environment
+- Status
+
+### Key Bindings
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `n` | `new_app` | Open create-application modal |
+| `d` | `delete_app` | Delete selected application (with confirmation) |
+| `enter` | `detail` | Open detail action placeholder for selected app |
+| `r` | `refresh` | Reload applications table |
+| `k` | `create_key` | Open create API key modal for selected app |
+
+### Create Application Modal
+
+The create modal includes:
+
+- `name` (required)
+- `app_id` (required)
+- `environment` (required, select)
+- `description` (optional)
+
+On success, the modal closes and the applications table is refreshed.
+
+### Create API Key Modal
+
+The API key modal requests a key name for the selected application, creates the
+key via API, and displays the generated key once.
+
+After creation:
+
+- Key value is shown in the modal
+- Create button is disabled
+- Input is disabled
+- User closes the modal with `Close`
+
 ## Development
 
 Run tests:
