@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 3 — Pydantic Schemas
+- **Fase Actual**: 4 — API Client Base
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -15,7 +15,7 @@
 | 1 | Project Scaffolding | ✅ Completada | 100% |
 | 2 | Configuration Module | ✅ Completada | 100% |
 | 3 | Pydantic Schemas | ✅ Completada | 100% |
-| 4 | API Client Base | ⏳ Pendiente | 0% |
+| 4 | API Client Base | ✅ Completada | 100% |
 | 5 | Local SQLite Database | ⏳ Pendiente | 0% |
 | 6 | Auth API Module | ⏳ Pendiente | 0% |
 | 7 | Login Screen | ⏳ Pendiente | 0% |
@@ -60,11 +60,11 @@
 ### Fase 4: API Client Base
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/api/client.py con OnyxLogClient y ApiClientError | ⏳ Pendiente | M |
-| T2 | Implementar health_check() en OnyxLogClient | ⏳ Pendiente | S |
-| T3 | Implementar tests/test_client.py con MockTransport | ⏳ Pendiente | M |
-| T4 | Actualizar README.md con seccion de API Client | ⏳ Pendiente | S |
-| T5 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/api/client.py con OnyxLogClient y ApiClientError | ✅ Completada | M |
+| T2 | Implementar health_check() en OnyxLogClient | ✅ Completada | S |
+| T3 | Implementar tests/test_client.py con MockTransport | ✅ Completada | M |
+| T4 | Actualizar README.md con seccion de API Client | ✅ Completada | S |
+| T5 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 5: Local SQLite Database
 | Tarea | Descripcion | Estado | Estimacion |
@@ -185,14 +185,15 @@
 
 - **src/config.py**: Settings con pydantic-settings, manejo de archivo TOML, prioridad CLI > env > file
 - **src/models/schemas.py**: Modelos Pydantic para User, App, Log, ApiKey, Auth, y respuestas
+- **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
 
 ## Metricas
 
 - **Cobertura de tests**: ~80% (proximamente)
-- **Archivos de codigo**: 8
-- **Archivos de tests**: 4
-- **Lineas de codigo**: ~160
-- **Lineas de tests**: ~350
+- **Archivos de codigo**: 9
+- **Archivos de tests**: 5
+- **Lineas de codigo**: ~220
+- **Lineas de tests**: ~420
 
 ## Notas
 
