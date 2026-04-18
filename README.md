@@ -277,6 +277,50 @@ The `LoginScreen` is the first screen shown when the TUI starts. It provides bot
 2. On registration success: Account is created, API key is stored, and dashboard is shown
 3. On registration failure: Error notification is displayed
 
+## App Shell (OnyxLogApp)
+
+The `OnyxLogApp` class is the main application entry point that manages the TUI lifecycle.
+
+### OnyxLogApp
+
+```python
+from src.app import OnyxLogApp
+
+app = OnyxLogApp()
+app.run()
+```
+
+### Auto-Login Flow
+
+On application startup, `OnyxLogApp` attempts auto-login:
+
+1. Initialize local SQLite database (`init_db()`)
+2. Check for active API key in local database (`get_active_key()`)
+3. If no key found → show `LoginScreen`
+4. If key found:
+   - Set API key on client (`client.set_api_key(key)`)
+   - Attempt health check (`client.health_check()`)
+   - On success → show `DashboardScreen`
+   - On failure → show `LoginScreen`
+
+### Key Bindings
+
+| Binding | Action | Description |
+|---------|--------|-------------|
+| `Ctrl+Q` | `quit` | Exit the application |
+| `Ctrl+C` | `quit` | Exit the application |
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `client` | `OnyxLogClient` | HTTP client for API communication |
+| `settings` | `Settings` | Application configuration |
+
+### CSS
+
+The app uses `styles.tcss` for styling. See `src/styles.tcss` for available styles.
+
 ## Development
 
 Run tests:
