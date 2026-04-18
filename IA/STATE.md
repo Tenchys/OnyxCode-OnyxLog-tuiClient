@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 2 — Configuration Module
+- **Fase Actual**: 3 — Pydantic Schemas
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -14,7 +14,7 @@
 |------|--------|--------|----------|
 | 1 | Project Scaffolding | ✅ Completada | 100% |
 | 2 | Configuration Module | ✅ Completada | 100% |
-| 3 | Pydantic Schemas | ⏳ Pendiente | 0% |
+| 3 | Pydantic Schemas | ✅ Completada | 100% |
 | 4 | API Client Base | ⏳ Pendiente | 0% |
 | 5 | Local SQLite Database | ⏳ Pendiente | 0% |
 | 6 | Auth API Module | ⏳ Pendiente | 0% |
@@ -52,10 +52,10 @@
 ### Fase 3: Pydantic Schemas
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/models/schemas.py con todos los modelos Pydantic | ⏳ Pendiente | M |
-| T2 | Implementar tests/test_schemas.py | ⏳ Pendiente | S |
-| T3 | Actualizar README.md con seccion de modelos | ⏳ Pendiente | S |
-| T4 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/models/schemas.py con todos los modelos Pydantic | ✅ Completada | M |
+| T2 | Implementar tests/test_schemas.py | ✅ Completada | S |
+| T3 | Actualizar README.md con seccion de modelos | ✅ Completada | S |
+| T4 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 4: API Client Base
 | Tarea | Descripcion | Estado | Estimacion |
@@ -184,14 +184,15 @@
 ## Componentes Implementados
 
 - **src/config.py**: Settings con pydantic-settings, manejo de archivo TOML, prioridad CLI > env > file
+- **src/models/schemas.py**: Modelos Pydantic para User, App, Log, ApiKey, Auth, y respuestas
 
 ## Metricas
 
-- **Cobertura de tests**: N/A (proximamente)
-- **Archivos de codigo**: 7
-- **Archivos de tests**: 3
-- **Lineas de codigo**: ~132
-- **Lineas de tests**: ~200
+- **Cobertura de tests**: ~80% (proximamente)
+- **Archivos de codigo**: 8
+- **Archivos de tests**: 4
+- **Lineas de codigo**: ~160
+- **Lineas de tests**: ~350
 
 ## Notas
 
