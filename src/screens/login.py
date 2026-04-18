@@ -70,16 +70,16 @@ class LoginScreen(Screen):
             else:
                 result = await register(client, username, email, password)
 
-            api_key = result.api_key.key
+            api_key = result.get_api_key()
             client.set_api_key(api_key)
 
             await db.store_key(
-                id=result.api_key.id,
+                id=result.get_key_id() or "unknown",
                 name=f"{username}-key",
                 key=api_key,
                 key_type="user",
                 server_url=self.app.settings.onyxlog_url,
-                role=result.api_key.role,
+                role=result.get_role() or "viewer",
                 user_id=str(result.user.id),
             )
 
@@ -90,8 +90,15 @@ class LoginScreen(Screen):
         except ApiClientError as e:
             message = ERROR_MESSAGES.get(e.error_code, e.message)
             self.notify(message, severity="error")
-        except Exception:
-            self.notify("An unexpected error occurred", severity="error")
+        except Exception as e:
+            import traceback
+
+            from rich.markup import escape
+
+            error_detail = escape(f"{type(e).__name__}: {e}")
+            self.notify(f"Error: {error_detail}", severity="error", timeout=10)
+            # Log full traceback to console for debugging
+            traceback.print_exc()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "login-btn":

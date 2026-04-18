@@ -11,7 +11,7 @@ from src.config import Settings
 async def _get_db_path(db_path: str | None = None) -> str:
     if db_path is not None:
         return db_path
-    return Path(Settings().db_path).expanduser().resolve().strpath
+    return str(Path(Settings().db_path).expanduser().resolve())
 
 
 async def init_db(db_path: str | None = None) -> None:

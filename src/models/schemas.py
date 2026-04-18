@@ -127,7 +127,25 @@ class AuthApiKeyResponse(BaseModel):
 
 class UserWithKey(BaseModel):
     user: UserRead
-    api_key: AuthApiKeyResponse
+    api_key: AuthApiKeyResponse | str
+
+    def get_api_key(self) -> str:
+        """Get the API key string regardless of response format."""
+        if isinstance(self.api_key, str):
+            return self.api_key
+        return self.api_key.key
+
+    def get_key_id(self) -> str | None:
+        """Get the API key ID if available."""
+        if isinstance(self.api_key, str):
+            return None
+        return self.api_key.id
+
+    def get_role(self) -> str | None:
+        """Get the role if available."""
+        if isinstance(self.api_key, str):
+            return None
+        return self.api_key.role
 
 
 class ErrorResponse(BaseModel):
