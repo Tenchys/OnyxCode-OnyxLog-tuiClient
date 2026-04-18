@@ -132,6 +132,72 @@ health = await client.health_check()
 # Returns HealthResponse(status="ok", version="1.0.0")
 ```
 
+## Local Database
+
+The TUI stores API keys locally in a SQLite database for convenience and security.
+
+### Database Location
+
+Default path: `~/.onyxlog/keys.db`
+
+### Schema
+
+```sql
+CREATE TABLE IF NOT EXISTS api_keys (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    key TEXT NOT NULL,
+    key_type TEXT NOT NULL,   -- 'user' | 'application'
+    role TEXT,                 -- 'admin' | 'viewer' (user only)
+    user_id TEXT,
+    app_id TEXT,
+    server_url TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    is_active INTEGER DEFAULT 1
+);
+```
+
+### Available Operations
+
+```python
+from src.db import init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key
+
+# Initialize database (creates table if not exists)
+await init_db()
+
+# Store a new API key
+await store_key(
+    id="key-1",
+    name="My API Key",
+    key="sk-xxxxx",
+    key_type="user",
+    server_url="http://localhost:8000",
+    role="admin",
+    user_id="user-123",
+)
+
+# Get active key for a server
+key = await get_active_key("http://localhost:8000")
+if key:
+    print(f"Active key: {key['name']}")
+
+# List all keys or filter by server
+all_keys = await list_keys()
+server_keys = await list_keys(server_url="http://localhost:8000")
+
+# Deactivate a key (soft delete)
+await deactivate_key("key-1")
+
+# Permanently delete a key
+await delete_key("key-1")
+```
+
+### Security
+
+- API keys are stored **only** in the local SQLite database
+- API keys are **never** stored in plain text config files or environment variables
+- The database file is stored in the user's home directory with default filesystem permissions
+
 ## Development
 
 Run tests:
