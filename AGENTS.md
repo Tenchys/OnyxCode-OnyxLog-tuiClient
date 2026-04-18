@@ -73,12 +73,17 @@ ruff format src/ tests/              # Formatear
 
 1. **Cuando el usuario mencione un subagente con `@onyxlog-<nombre>` o diga "usa el subagente X", SIEMPRE delegar la tarea al subagente correspondiente via la herramienta `task` con `subagent_type`.**
 2. **NUNCA cargar el skill manualmente y ejecutar los pasos uno mismo cuando se pidio usar un subagente.**
-3. Subagentes disponibles:
-   - `onyxlog-tui-builder` → implementar features del TUI Client
-   - `onyxlog-committer` → crear commits semanticos y PRs
-   - `onyxlog-doc-writer` → generar/actualizar documentacion
-   - `onyxlog-phase-creator` → crear contenido de fases
-   - `onyxlog-phase-writer` → escribir fases en el filesystem
-   - `onyxlog-planner` → planificar implementacion de fases
-   - `onyxlog-reviewer` → revision de codigo
-   - `onyxlog-tui-review` → revision de codigo TUI Client
+3. Usar siempre la tabla de mapeo siguiente para evitar confusiones entre el nombre visible, `subagent_type` y el skill asociado:
+
+| Nombre visible | `subagent_type` | Skill asociado | Uso |
+|---|---|---|---|
+| `onyxlog-tui-builder` | `onyxlog-tui-builder` | `onyxlog-tui-builder` | Implementar features del TUI Client |
+| `onyxlog-committer` | `onyxlog-committer` | `onyxlog-commit` | Crear commits semanticos y PRs |
+| `onyxlog-doc-writer` | `onyxlog-doc-writer` | `onyxlog-docs` | Generar o actualizar documentacion |
+| `onyxlog-phase-creator` | `onyxlog-phase-creator` | `onyxlog-phase-creator` | Crear contenido de fases |
+| `onyxlog-phase-writer` | `onyxlog-phase-writer` | `onyxlog-phase-writer` | Escribir fases en el filesystem |
+| `onyxlog-planner` | `onyxlog-planner` | `onyxlog-planner` | Planificar implementacion de fases |
+| `onyxlog-reviewer` | `onyxlog-reviewer` | `onyxlog-review` | Revision de codigo |
+| `onyxlog-tui-review` | `onyxlog-tui-review` | `onyxlog-tui-review` | Revision de codigo del TUI Client |
+
+4. Si el nombre visible y el skill asociado difieren, seguir la columna `subagent_type` para la delegacion y usar el skill indicado solo como referencia de contexto.
