@@ -68,3 +68,17 @@ ruff format src/ tests/              # Formatear
 | Configuracion del servidor (codigo) | `src/config.py` |
 | Esquema de base de datos (codigo) | `src/db.py` |
 | Patrones Textual UI | `src/screens/` |
+
+## Reglas de Subagentes
+
+1. **Cuando el usuario mencione un subagente con `@onyxlog-<nombre>` o diga "usa el subagente X", SIEMPRE delegar la tarea al subagente correspondiente via la herramienta `task` con `subagent_type`.**
+2. **NUNCA cargar el skill manualmente y ejecutar los pasos uno mismo cuando se pidio usar un subagente.**
+3. Subagentes disponibles:
+   - `onyxlog-tui-builder` → implementar features del TUI Client
+   - `onyxlog-committer` → crear commits semanticos y PRs
+   - `onyxlog-doc-writer` → generar/actualizar documentacion
+   - `onyxlog-phase-creator` → crear contenido de fases
+   - `onyxlog-phase-writer` → escribir fases en el filesystem
+   - `onyxlog-planner` → planificar implementacion de fases
+   - `onyxlog-reviewer` → revision de codigo
+   - `onyxlog-tui-review` → revision de codigo TUI Client
