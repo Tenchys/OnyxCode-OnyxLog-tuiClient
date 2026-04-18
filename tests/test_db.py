@@ -88,6 +88,37 @@ async def test_store_key_with_application_type_and_app_id(tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_store_key_upserts_on_duplicate_id(tmp_path):
+    db_path = str(tmp_path / "test.db")
+    await init_db(db_path)
+    await store_key(
+        id="key-duplicate",
+        name="First Key",
+        key="first-value",
+        key_type="user",
+        server_url="http://localhost:8000",
+        db_path=db_path,
+    )
+    await store_key(
+        id="key-duplicate",
+        name="Updated Key",
+        key="updated-value",
+        key_type="user",
+        server_url="http://localhost:8000",
+        db_path=db_path,
+    )
+
+    result = await get_active_key("http://localhost:8000", db_path)
+    assert result is not None
+    assert result["id"] == "key-duplicate"
+    assert result["name"] == "Updated Key"
+    assert result["key"] == "updated-value"
+
+    results = await list_keys(db_path=db_path)
+    assert len(results) == 1
+
+
+@pytest.mark.asyncio
 async def test_get_active_key_returns_active_key(tmp_path):
     db_path = str(tmp_path / "test.db")
     await init_db(db_path)
