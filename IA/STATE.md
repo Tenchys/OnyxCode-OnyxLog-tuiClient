@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 1 — Project Scaffolding
+- **Fase Actual**: 2 — Configuration Module
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -13,7 +13,7 @@
 | Fase | Nombre | Estado | Progreso |
 |------|--------|--------|----------|
 | 1 | Project Scaffolding | ✅ Completada | 100% |
-| 2 | Configuration Module | ⏳ Pendiente | 0% |
+| 2 | Configuration Module | ✅ Completada | 100% |
 | 3 | Pydantic Schemas | ⏳ Pendiente | 0% |
 | 4 | API Client Base | ⏳ Pendiente | 0% |
 | 5 | Local SQLite Database | ⏳ Pendiente | 0% |
@@ -44,10 +44,10 @@
 ### Fase 2: Configuration Module
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/config.py con Settings y config file handling | ⏳ Pendiente | S |
-| T2 | Implementar tests/test_config.py | ⏳ Pendiente | S |
-| T3 | Actualizar README.md con seccion de configuracion | ⏳ Pendiente | S |
-| T4 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/config.py con Settings y config file handling | ✅ Completada | S |
+| T2 | Implementar tests/test_config.py | ✅ Completada | S |
+| T3 | Actualizar README.md con seccion de configuracion | ✅ Completada | S |
+| T4 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 3: Pydantic Schemas
 | Tarea | Descripcion | Estado | Estimacion |
@@ -183,14 +183,15 @@
 
 ## Componentes Implementados
 
-Ninguno (proyecto greenfield)
+- **src/config.py**: Settings con pydantic-settings, manejo de archivo TOML, prioridad CLI > env > file
 
 ## Metricas
 
-- **Cobertura de tests**: N/A
-- **Archivos de codigo**: 6
-- **Archivos de tests**: 2
-- **Lineas de codigo**: ~50
+- **Cobertura de tests**: N/A (proximamente)
+- **Archivos de codigo**: 7
+- **Archivos de tests**: 3
+- **Lineas de codigo**: ~132
+- **Lineas de tests**: ~200
 
 ## Notas
 

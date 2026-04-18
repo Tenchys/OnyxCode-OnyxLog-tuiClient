@@ -20,6 +20,29 @@ With custom server URL:
 onyxlog-tui --url http://host:8000
 ```
 
+## Configuration
+
+The OnyxLog TUI Client uses a priority-based configuration system:
+
+**Priority: CLI flag > environment variable > config file > default**
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ONYXLOG_URL` | Server URL | `http://localhost:8000` |
+
+### Config File
+
+The config file is located at `~/.onyxlog/config.toml` and uses the TOML format:
+
+```toml
+[server]
+url = "http://localhost:8000"
+```
+
+The config directory `~/.onyxlog/` is created automatically if it doesn't exist.
+
 ## Development
 
 Run tests:
