@@ -1,7 +1,7 @@
 ---
 description: Agente especializado en detectar inconsistencias entre una fase o tarea y el codigo real, y corregirlas directamente sin delegar la revision ni la reparacion a otros subagentes.
 mode: subagent
-model: OpenAI/GPT-5.3 Codex
+model: openai/gpt-5.3-codex
 temperature: 0.2
 permission:
   skill:
