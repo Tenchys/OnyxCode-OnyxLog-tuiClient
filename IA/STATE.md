@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 5 — Local SQLite Database
+- **Fase Actual**: 6 — Auth API Module
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -17,7 +17,7 @@
 | 3 | Pydantic Schemas | ✅ Completada | 100% |
 | 4 | API Client Base | ✅ Completada | 100% |
 | 5 | Local SQLite Database | ✅ Completada | 100% |
-| 6 | Auth API Module | ⏳ Pendiente | 0% |
+| 6 | Auth API Module | ✅ Completada | 100% |
 | 7 | Login Screen | ⏳ Pendiente | 0% |
 | 8 | App Shell (OnyxLogApp) | ⏳ Pendiente | 0% |
 | 9 | Dashboard Screen | ⏳ Pendiente | 0% |
@@ -77,10 +77,10 @@
 ### Fase 6: Auth API Module
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/api/auth.py con register() y login() | ⏳ Pendiente | S |
-| T2 | Implementar tests/test_auth.py con mock_client | ⏳ Pendiente | S |
-| T3 | Actualizar README.md con seccion de autenticacion | ⏳ Pendiente | S |
-| T4 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/api/auth.py con register() y login() | ✅ Completada | S |
+| T2 | Implementar tests/test_auth.py con mock_client | ✅ Completada | S |
+| T3 | Actualizar README.md con seccion de autenticacion | ✅ Completada | S |
+| T4 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 7: Login Screen
 | Tarea | Descripcion | Estado | Estimacion |
@@ -186,6 +186,7 @@
 - **src/config.py**: Settings con pydantic-settings, manejo de archivo TOML, prioridad CLI > env > file
 - **src/models/schemas.py**: Modelos Pydantic para User, App, Log, ApiKey, Auth, y respuestas
 - **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
+- **src/api/auth.py**: Funciones register() y login() para autenticacion
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 
 ## Metricas

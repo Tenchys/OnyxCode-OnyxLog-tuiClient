@@ -132,6 +132,45 @@ health = await client.health_check()
 # Returns HealthResponse(status="ok", version="1.0.0")
 ```
 
+## Authentication
+
+The `src/api/auth.py` module provides `register()` and `login()` functions.
+
+### Register
+
+```python
+from src.api.auth import register
+from src.api.client import OnyxLogClient
+
+async with OnyxLogClient() as client:
+    user_with_key = await register(
+        client,
+        username="newuser",
+        email="user@example.com",
+        password="securepassword",
+    )
+    print(f"User: {user_with_key.user.username}")
+    print(f"API Key: {user_with_key.api_key.key}")
+```
+
+### Login
+
+```python
+from src.api.auth import login
+from src.api.client import OnyxLogClient
+
+async with OnyxLogClient() as client:
+    user_with_key = await login(client, username="existinguser", password="password")
+    client.set_api_key(user_with_key.api_key.key)
+```
+
+### Return Value
+
+Both functions return `UserWithKey` containing:
+
+- `user`: `UserRead` with id, username, email, role, is_active, created_at
+- `api_key`: `AuthApiKeyResponse` with id, key, role
+
 ## Local Database
 
 The TUI stores API keys locally in a SQLite database for convenience and security.
