@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 6 — Auth API Module
+- **Fase Actual**: 7 — Login Screen
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -18,7 +18,7 @@
 | 4 | API Client Base | ✅ Completada | 100% |
 | 5 | Local SQLite Database | ✅ Completada | 100% |
 | 6 | Auth API Module | ✅ Completada | 100% |
-| 7 | Login Screen | ⏳ Pendiente | 0% |
+| 7 | Login Screen | ✅ Completada | 100% |
 | 8 | App Shell (OnyxLogApp) | ⏳ Pendiente | 0% |
 | 9 | Dashboard Screen | ⏳ Pendiente | 0% |
 | 10 | Applications API | ⏳ Pendiente | 0% |
@@ -85,12 +85,12 @@
 ### Fase 7: Login Screen
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/screens/login.py con LoginScreen | ⏳ Pendiente | M |
-| T2 | Implementar flujo de login/registro en LoginScreen | ⏳ Pendiente | S |
-| T3 | Implementar manejo de errores en LoginScreen | ⏳ Pendiente | S |
-| T4 | Implementar tests/test_login_screen.py con Textual pilot | ⏳ Pendiente | M |
-| T5 | Actualizar README.md con seccion de login | ⏳ Pendiente | S |
-| T6 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/screens/login.py con LoginScreen | ✅ Completada | M |
+| T2 | Implementar flujo de login/registro en LoginScreen | ✅ Completada | S |
+| T3 | Implementar manejo de errores en LoginScreen | ✅ Completada | S |
+| T4 | Implementar tests/test_login_screen.py con Textual pilot | ✅ Completada | M |
+| T5 | Actualizar README.md con seccion de login | ✅ Completada | S |
+| T6 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 8: App Shell (OnyxLogApp)
 | Tarea | Descripcion | Estado | Estimacion |
@@ -188,14 +188,15 @@
 - **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
 - **src/api/auth.py**: Funciones register() y login() para autenticacion
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
+- **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
 
 ## Metricas
 
 - **Cobertura de tests**: ~80% (proximamente)
-- **Archivos de codigo**: 10
-- **Archivos de tests**: 6
-- **Lineas de codigo**: ~340
-- **Lineas de tests**: ~680
+- **Archivos de codigo**: 11
+- **Archivos de tests**: 7
+- **Lineas de codigo**: ~440
+- **Lineas de tests**: ~980
 
 ## Notas
 
