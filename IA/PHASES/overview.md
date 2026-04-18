@@ -5,14 +5,14 @@
 | Fase | Estado | Progreso | Archivo |
 |------|--------|----------|---------|
 | 1 — Project Scaffolding | ✅ Completada | 100% | [phase-1.md](phase-1.md) |
-| 2 — Configuration Module | ⏳ Pendiente | 0% | [phase-2.md](phase-2.md) |
-| 3 — Pydantic Schemas | ⏳ Pendiente | 0% | [phase-3.md](phase-3.md) |
-| 4 — API Client Base | ⏳ Pendiente | 0% | [phase-4.md](phase-4.md) |
-| 5 — Local SQLite Database | ⏳ Pendiente | 0% | [phase-5.md](phase-5.md) |
-| 6 — Auth API Module | ⏳ Pendiente | 0% | [phase-6.md](phase-6.md) |
-| 7 — Login Screen | ⏳ Pendiente | 0% | [phase-7.md](phase-7.md) |
-| 8 — App Shell (OnyxLogApp) | ⏳ Pendiente | 0% | [phase-8.md](phase-8.md) |
-| 9 — Dashboard Screen | ⏳ Pendiente | 0% | [phase-9.md](phase-9.md) |
+| 2 — Configuration Module | ✅ Completada | 100% | [phase-2.md](phase-2.md) |
+| 3 — Pydantic Schemas | ✅ Completada | 100% | [phase-3.md](phase-3.md) |
+| 4 — API Client Base | ✅ Completada | 100% | [phase-4.md](phase-4.md) |
+| 5 — Local SQLite Database | ✅ Completada | 100% | [phase-5.md](phase-5.md) |
+| 6 — Auth API Module | ✅ Completada | 100% | [phase-6.md](phase-6.md) |
+| 7 — Login Screen | ✅ Completada | 100% | [phase-7.md](phase-7.md) |
+| 8 — App Shell (OnyxLogApp) | ✅ Completada | 100% | [phase-8.md](phase-8.md) |
+| 9 — Dashboard Screen | ✅ Completada | 100% | [phase-9.md](phase-9.md) |
 | 10 — Applications API | ⏳ Pendiente | 0% | [phase-10.md](phase-10.md) |
 | 11 — Applications Screen | ⏳ Pendiente | 0% | [phase-11.md](phase-11.md) |
 | 12 — Logs API | ⏳ Pendiente | 0% | [phase-12.md](phase-12.md) |
