@@ -5,8 +5,8 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 8 — App Shell (OnyxLogApp)
-- **Estado**: ✅ Completada
+- **Fase Actual**: 9 — Dashboard Screen
+- **Estado**: ✅ Completada (Fases 1-9)
 
 ## Progreso por Fase
 
@@ -20,7 +20,7 @@
 | 6 | Auth API Module | ✅ Completada | 100% |
 | 7 | Login Screen | ✅ Completada | 100% |
 | 8 | App Shell (OnyxLogApp) | ✅ Completada | 100% |
-| 9 | Dashboard Screen | ⏳ Pendiente | 0% |
+| 9 | Dashboard Screen | ✅ Completada | 100% |
 | 10 | Applications API | ⏳ Pendiente | 0% |
 | 11 | Applications Screen | ⏳ Pendiente | 0% |
 | 12 | Logs API | ⏳ Pendiente | 0% |
@@ -105,12 +105,12 @@
 ### Fase 9: Dashboard Screen
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/screens/dashboard.py con DashboardScreen y menu | ⏳ Pendiente | M |
-| T2 | Implementar key bindings en DashboardScreen | ⏳ Pendiente | S |
-| T3 | Implementar stats overview en DashboardScreen | ⏳ Pendiente | M |
-| T4 | Implementar tests/test_dashboard_screen.py con Textual pilot | ⏳ Pendiente | M |
-| T5 | Actualizar README.md con seccion de dashboard | ⏳ Pendiente | S |
-| T6 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/screens/dashboard.py con DashboardScreen y menu | ✅ Completada | M |
+| T2 | Implementar key bindings en DashboardScreen | ✅ Completada | S |
+| T3 | Implementar stats overview en DashboardScreen | ✅ Completada | M |
+| T4 | Implementar tests/test_dashboard_screen.py con Textual pilot | ✅ Completada | M |
+| T5 | Actualizar README.md con seccion de dashboard | ✅ Completada | S |
+| T6 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 10: Applications API
 | Tarea | Descripcion | Estado | Estimacion |
@@ -189,16 +189,20 @@
 - **src/api/auth.py**: Funciones register() y login() para autenticacion
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 - **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
+- **src/screens/dashboard.py**: DashboardScreen con menu de navegacion, stats overview y key bindings
+- **src/screens/applications.py**: ApplicationsScreen placeholder (Phase 11)
+- **src/screens/logs.py**: LogsScreen placeholder (Phase 13)
+- **src/screens/settings.py**: SettingsScreen placeholder (Phase 14)
 - **src/app.py**: OnyxLogApp con auto-login, ciclo de vida, bindings para quit y composicion de pantallas
 - **src/styles.tcss**: Estilos base para la aplicacion con tema dark y estilos para componentes
 
 ## Metricas
 
 - **Cobertura de tests**: ~80%
-- **Archivos de codigo**: 13
-- **Archivos de tests**: 8
-- **Lineas de codigo**: ~520
-- **Lineas de tests**: ~1100
+- **Archivos de codigo**: 17
+- **Archivos de tests**: 9
+- **Lineas de codigo**: ~600
+- **Lineas de tests**: ~1200
 
 ## Notas
 

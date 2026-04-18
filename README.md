@@ -321,6 +321,62 @@ On application startup, `OnyxLogApp` attempts auto-login:
 
 The app uses `styles.tcss` for styling. See `src/styles.tcss` for available styles.
 
+## Dashboard Screen
+
+The `DashboardScreen` is the main screen shown after successful login. It provides navigation to all TUI features and displays system statistics.
+
+### Navigation Menu
+
+The dashboard provides a navigation menu with three main options:
+
+- **Applications**: Manage applications and API keys
+- **Logs**: View and filter log entries
+- **Settings**: Configure server URL, manage API keys, logout
+
+### Statistics Overview
+
+The dashboard automatically loads and displays system statistics from the server:
+
+- **Total Logs**: Total number of log entries in the system
+- **Total Applications**: Total number of registered applications
+- **Active Applications**: Number of currently active applications
+- **Recent Logs (24h)**: Number of log entries from the last 24 hours
+
+Stats are loaded on mount using `GET /api/v1/stats/overview`. If the server is unreachable, "Unable to load stats" is displayed.
+
+### Key Bindings
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `a` | `go_applications` | Navigate to Applications screen |
+| `l` | `go_logs` | Navigate to Logs screen |
+| `s` | `go_settings` | Navigate to Settings screen |
+| `q` | `quit` | Exit the application |
+| `Escape` | `go_back` | Go back to previous screen |
+
+### Screen Layout
+
+```
+┌─────────────────────────────────────────────┐
+│                 OnyxLog                      │
+├─────────────────────────────────────────────┤
+│                                             │
+│            OnyxLog Dashboard                 │
+│                                             │
+│  Navigation                                 │
+│  [Applications] [Logs] [Settings]           │
+│                                             │
+│  Statistics Overview                        │
+│    Total Logs:       1,000                  │
+│    Total Applications: 5                    │
+│    Active Applications: 3                   │
+│    Recent Logs (24h): 250                   │
+│                                             │
+├─────────────────────────────────────────────┤
+│  a: apps  l: logs  s: settings  q: quit     │
+└─────────────────────────────────────────────┘
+```
+
 ## Development
 
 Run tests:
