@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 4 — API Client Base
+- **Fase Actual**: 5 — Local SQLite Database
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -16,7 +16,7 @@
 | 2 | Configuration Module | ✅ Completada | 100% |
 | 3 | Pydantic Schemas | ✅ Completada | 100% |
 | 4 | API Client Base | ✅ Completada | 100% |
-| 5 | Local SQLite Database | ⏳ Pendiente | 0% |
+| 5 | Local SQLite Database | ✅ Completada | 100% |
 | 6 | Auth API Module | ⏳ Pendiente | 0% |
 | 7 | Login Screen | ⏳ Pendiente | 0% |
 | 8 | App Shell (OnyxLogApp) | ⏳ Pendiente | 0% |
@@ -69,10 +69,10 @@
 ### Fase 5: Local SQLite Database
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/db.py con init_db y CRUD operations | ⏳ Pendiente | M |
-| T2 | Implementar tests/test_db.py con SQLite real en tmp_path | ⏳ Pendiente | M |
-| T3 | Actualizar README.md con seccion de base de datos local | ⏳ Pendiente | S |
-| T4 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/db.py con init_db y CRUD operations | ✅ Completada | M |
+| T2 | Implementar tests/test_db.py con SQLite real en tmp_path | ✅ Completada | M |
+| T3 | Actualizar README.md con seccion de base de datos local | ✅ Completada | S |
+| T4 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 6: Auth API Module
 | Tarea | Descripcion | Estado | Estimacion |
@@ -186,14 +186,15 @@
 - **src/config.py**: Settings con pydantic-settings, manejo de archivo TOML, prioridad CLI > env > file
 - **src/models/schemas.py**: Modelos Pydantic para User, App, Log, ApiKey, Auth, y respuestas
 - **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
+- **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 
 ## Metricas
 
 - **Cobertura de tests**: ~80% (proximamente)
-- **Archivos de codigo**: 9
-- **Archivos de tests**: 5
-- **Lineas de codigo**: ~220
-- **Lineas de tests**: ~420
+- **Archivos de codigo**: 10
+- **Archivos de tests**: 6
+- **Lineas de codigo**: ~340
+- **Lineas de tests**: ~680
 
 ## Notas
 
