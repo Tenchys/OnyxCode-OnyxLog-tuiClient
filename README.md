@@ -237,6 +237,46 @@ await delete_key("key-1")
 - API keys are **never** stored in plain text config files or environment variables
 - The database file is stored in the user's home directory with default filesystem permissions
 
+## Login Screen
+
+The `LoginScreen` is the first screen shown when the TUI starts. It provides both login and registration functionality.
+
+### Features
+
+- **Login**: Authenticate with username and password
+- **Register**: Create a new account with username, email, and password
+- **Form Validation**: Required fields are validated before submission
+- **Error Handling**: User-friendly error messages for all failure scenarios
+
+### Error Messages
+
+| Error Code | User Message |
+|------------|-------------|
+| `INVALID_CREDENTIALS` | Invalid username or password |
+| `DUPLICATE_ENTRY` | Username or email already exists |
+| `CONNECTION_ERROR` | Cannot connect to server. Check URL and try again. |
+| `VALIDATION_ERROR` | Please check the form fields. |
+| `TIMEOUT` | Server is taking too long to respond. |
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Enter` | Submit login form |
+| `q` | Quit the application |
+
+### Login Flow
+
+1. User enters username and password
+2. On login success: API key is stored in local SQLite database and dashboard is shown
+3. On login failure: Error notification is displayed
+
+### Register Flow
+
+1. User enters username, email, and password
+2. On registration success: Account is created, API key is stored, and dashboard is shown
+3. On registration failure: Error notification is displayed
+
 ## Development
 
 Run tests:
