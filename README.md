@@ -171,6 +171,108 @@ Both functions return `UserWithKey` containing:
 - `user`: `UserRead` with id, username, email, role, is_active, created_at
 - `api_key`: `AuthApiKeyResponse` with id, key, role
 
+## Applications API
+
+The `src/api/applications.py` module provides CRUD operations for applications and application API keys.
+
+### List Applications
+
+```python
+from src.api.applications import list_applications
+from src.api.client import OnyxLogClient
+
+async with OnyxLogClient() as client:
+    client.set_api_key("your-api-key")
+    apps = await list_applications(client, limit=50, offset=0)
+    for app in apps.items:
+        print(f"{app.name}: {app.app_id}")
+```
+
+### Create Application
+
+```python
+from src.api.applications import create_application
+from src.api.client import OnyxLogClient
+from src.models.schemas import AppCreate
+
+async with OnyxLogClient() as client:
+    client.set_api_key("your-api-key")
+    app = await create_application(
+        client,
+        AppCreate(
+            name="My App",
+            app_id="my-app",
+            description="Application description",
+            environment="production",
+        ),
+    )
+    print(f"Created: {app.id}")
+```
+
+### Get Application
+
+```python
+from src.api.applications import get_application
+
+app = await get_application(client, "my-app")
+print(f"Name: {app.name}, Active: {app.is_active}")
+```
+
+### Update Application
+
+```python
+from src.api.applications import update_application
+from src.api.client import OnyxLogClient
+from src.models.schemas import AppUpdate
+
+app = await update_application(
+    client,
+    "my-app",
+    AppUpdate(description="Updated description", is_active=False),
+)
+```
+
+### Delete Application
+
+```python
+from src.api.applications import delete_application
+
+await delete_application(client, "my-app")
+```
+
+### Application API Keys
+
+```python
+from src.api.applications import list_app_keys, create_app_key
+from src.api.client import OnyxLogClient
+from src.models.schemas import ApiKeyCreate
+
+# List keys for an application
+keys = await list_app_keys(client, "my-app")
+for key in keys:
+    print(f"Key: {key.id}, Name: {key.name}")
+
+# Create a new API key for an application
+response = await create_app_key(
+    client,
+    "my-app",
+    ApiKeyCreate(name="Production Key", expires_in_days=365),
+)
+print(f"New key: {response.key}")  # Only returned once!
+```
+
+### Return Values
+
+| Function | Returns |
+|----------|---------|
+| `list_applications` | `PaginatedResponse[AppRead]` |
+| `create_application` | `AppRead` |
+| `get_application` | `AppRead` |
+| `update_application` | `AppRead` |
+| `delete_application` | `None` |
+| `list_app_keys` | `list[ApiKeyRead]` |
+| `create_app_key` | `ApiKeyCreateResponse` (with `key` field) |
+
 ## Local Database
 
 The TUI stores API keys locally in a SQLite database for convenience and security.

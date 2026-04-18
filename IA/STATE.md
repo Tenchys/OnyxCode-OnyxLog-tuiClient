@@ -5,8 +5,8 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 9 — Dashboard Screen
-- **Estado**: ✅ Completada (Fases 1-9)
+- **Fase Actual**: 10 — Applications API
+- **Estado**: ✅ Completada (Fases 1-10 completadas, 11+ pendientes)
 
 ## Progreso por Fase
 
@@ -21,7 +21,7 @@
 | 7 | Login Screen | ✅ Completada | 100% |
 | 8 | App Shell (OnyxLogApp) | ✅ Completada | 100% |
 | 9 | Dashboard Screen | ✅ Completada | 100% |
-| 10 | Applications API | ⏳ Pendiente | 0% |
+| 10 | Applications API | ✅ Completada | 100% |
 | 11 | Applications Screen | ⏳ Pendiente | 0% |
 | 12 | Logs API | ⏳ Pendiente | 0% |
 | 13 | Logs Screen | ⏳ Pendiente | 0% |
@@ -115,11 +115,11 @@
 ### Fase 10: Applications API
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/api/applications.py con CRUD de aplicaciones | ⏳ Pendiente | M |
-| T2 | Implementar gestion de API keys de aplicaciones | ⏳ Pendiente | S |
-| T3 | Implementar tests/test_applications_api.py con mock_client | ⏳ Pendiente | M |
-| T4 | Actualizar README.md con seccion de Applications API | ⏳ Pendiente | S |
-| T5 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/api/applications.py con CRUD de aplicaciones | ✅ Completada | M |
+| T2 | Implementar gestion de API keys de aplicaciones | ✅ Completada | S |
+| T3 | Implementar tests/test_applications_api.py con mock_client | ✅ Completada | M |
+| T4 | Actualizar README.md con seccion de Applications API | ✅ Completada | S |
+| T5 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 11: Applications Screen
 | Tarea | Descripcion | Estado | Estimacion |
@@ -187,6 +187,7 @@
 - **src/models/schemas.py**: Modelos Pydantic para User, App, Log, ApiKey, Auth, y respuestas
 - **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
 - **src/api/auth.py**: Funciones register() y login() para autenticacion
+- **src/api/applications.py**: CRUD de aplicaciones y gestion de API keys (Phase 10)
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 - **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
 - **src/screens/dashboard.py**: DashboardScreen con menu de navegacion, stats overview y key bindings
@@ -200,7 +201,7 @@
 
 - **Cobertura de tests**: ~80%
 - **Archivos de codigo**: 17
-- **Archivos de tests**: 9
+- **Archivos de tests**: 10
 - **Lineas de codigo**: ~600
 - **Lineas de tests**: ~1200
 
