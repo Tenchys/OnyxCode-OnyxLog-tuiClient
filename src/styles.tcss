@@ -1,0 +1,168 @@
+/* OnyxLog TUI Base Styles */
+
+Screen {
+    background: $surface;
+    color: $text;
+}
+
+Header {
+    background: $primary;
+    color: $text;
+}
+
+Footer {
+    background: $surface;
+    color: $text-muted;
+}
+
+/* Login Screen */
+LoginScreen {
+    align: center middle;
+}
+
+#login-container {
+    width: 60;
+    height: auto;
+    background: $panel;
+    border: solid $primary;
+    padding: 2 4;
+}
+
+.login-title {
+    text-align: center;
+    color: $primary;
+    text-style: bold;
+}
+
+.login-container {
+    width: 100%;
+    height: 100%;
+}
+
+#username-input, #password-input, #email-input {
+    margin: 1 0;
+}
+
+.button-row {
+    align: center middle;
+    height: auto;
+    margin-top: 2;
+}
+
+/* Dashboard Screen */
+DashboardScreen {
+    background: $surface;
+}
+
+#sidebar {
+    width: 25;
+    background: $panel;
+    border-right: solid $primary;
+}
+
+#main-content {
+    width: 100%;
+}
+
+.nav-item {
+    padding: 1 2;
+}
+
+.nav-item:hover {
+    background: $primary-darken-1;
+}
+
+/* Data Tables */
+DataTable {
+    background: $surface;
+    border: solid $primary;
+}
+
+DataTable > .datatable--cursor {
+    background: $primary;
+    color: $text;
+}
+
+/* Buttons */
+Button {
+    margin: 0 1;
+}
+
+Button.variant-primary {
+    background: $primary;
+}
+
+Button.variant-success {
+    background: $success;
+}
+
+Button.variant-warning {
+    background: $warning;
+}
+
+Button.variant-error {
+    background: $error;
+}
+
+/* Inputs */
+Input {
+    border: solid $primary;
+}
+
+Input:focus {
+    border: solid $accent;
+}
+
+/* Modals */
+ModalScreen {
+    align: center middle;
+}
+
+.modal-container {
+    background: $panel;
+    border: solid $primary;
+    padding: 2 4;
+    width: 50;
+    height: auto;
+}
+
+/* Notifications */
+Notification {
+    background: $panel;
+    border: solid $accent;
+}
+
+/* Status indicators */
+.status-ok {
+    color: $success;
+}
+
+.status-error {
+    color: $error;
+}
+
+.status-warning {
+    color: $warning;
+}
+
+/* Log level colors */
+.level-debug {
+    color: $text-muted;
+}
+
+.level-info {
+    color: $accent;
+}
+
+.level-warning {
+    color: $warning;
+}
+
+.level-error {
+    color: $error;
+}
+
+.level-critical {
+    color: $error;
+    text-style: bold;
+}

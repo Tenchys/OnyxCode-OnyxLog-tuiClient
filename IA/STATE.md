@@ -5,7 +5,7 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 7 — Login Screen
+- **Fase Actual**: 8 — App Shell (OnyxLogApp)
 - **Estado**: ✅ Completada
 
 ## Progreso por Fase
@@ -19,7 +19,7 @@
 | 5 | Local SQLite Database | ✅ Completada | 100% |
 | 6 | Auth API Module | ✅ Completada | 100% |
 | 7 | Login Screen | ✅ Completada | 100% |
-| 8 | App Shell (OnyxLogApp) | ⏳ Pendiente | 0% |
+| 8 | App Shell (OnyxLogApp) | ✅ Completada | 100% |
 | 9 | Dashboard Screen | ⏳ Pendiente | 0% |
 | 10 | Applications API | ⏳ Pendiente | 0% |
 | 11 | Applications Screen | ⏳ Pendiente | 0% |
@@ -95,12 +95,12 @@
 ### Fase 8: App Shell (OnyxLogApp)
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/app.py con OnyxLogApp | ⏳ Pendiente | M |
-| T2 | Crear src/styles.tcss con estilos base | ⏳ Pendiente | S |
-| T3 | Implementar auto-login en OnyxLogApp | ⏳ Pendiente | S |
-| T4 | Implementar tests/test_app.py con Textual pilot | ⏳ Pendiente | M |
-| T5 | Actualizar README.md con seccion de app shell | ⏳ Pendiente | S |
-| T6 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/app.py con OnyxLogApp | ✅ Completada | M |
+| T2 | Crear src/styles.tcss con estilos base | ✅ Completada | S |
+| T3 | Implementar auto-login en OnyxLogApp | ✅ Completada | S |
+| T4 | Implementar tests/test_app.py con Textual pilot | ✅ Completada | M |
+| T5 | Actualizar README.md con seccion de app shell | ✅ Completada | S |
+| T6 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 9: Dashboard Screen
 | Tarea | Descripcion | Estado | Estimacion |
@@ -189,14 +189,16 @@
 - **src/api/auth.py**: Funciones register() y login() para autenticacion
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 - **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
+- **src/app.py**: OnyxLogApp con auto-login, ciclo de vida, bindings para quit y composicion de pantallas
+- **src/styles.tcss**: Estilos base para la aplicacion con tema dark y estilos para componentes
 
 ## Metricas
 
-- **Cobertura de tests**: ~80% (proximamente)
-- **Archivos de codigo**: 11
-- **Archivos de tests**: 7
-- **Lineas de codigo**: ~440
-- **Lineas de tests**: ~980
+- **Cobertura de tests**: ~80%
+- **Archivos de codigo**: 13
+- **Archivos de tests**: 8
+- **Lineas de codigo**: ~520
+- **Lineas de tests**: ~1100
 
 ## Notas
 
