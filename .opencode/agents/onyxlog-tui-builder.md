@@ -1,7 +1,7 @@
 ---
 description: Agente especializado en implementar features del OnyxLog TUI Client. Conoce la arquitectura Textual/Rich/httpx/aiosqlite y las convenciones del proyecto.
 mode: subagent
-model: opencode-go/minimax-m2.5
+model: opencode-go/minimax-m2.7
 temperature: 0.2
 permission:
   skill:
