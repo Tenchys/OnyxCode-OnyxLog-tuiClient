@@ -7,11 +7,6 @@ import pytest
 
 
 @pytest.fixture
-def tmp_path_factory(tmp_path):
-    return tmp_path
-
-
-@pytest.fixture
 def mock_settings():
     settings = MagicMock()
     settings.ONYXLOG_URL = "http://localhost:8000"
