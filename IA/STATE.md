@@ -5,8 +5,8 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 10 — Applications API
-- **Estado**: ✅ Completada (Fases 1-10 completadas, 11+ pendientes)
+- **Fase Actual**: 13 — Logs Screen
+- **Estado**: ✅ Completada (Fases 1-12 completadas, 13+ pendientes)
 
 ## Progreso por Fase
 
@@ -22,8 +22,8 @@
 | 8 | App Shell (OnyxLogApp) | ✅ Completada | 100% |
 | 9 | Dashboard Screen | ✅ Completada | 100% |
 | 10 | Applications API | ✅ Completada | 100% |
-| 11 | Applications Screen | ⏳ Pendiente | 0% |
-| 12 | Logs API | ⏳ Pendiente | 0% |
+| 11 | Applications Screen | ✅ Completada | 100% |
+| 12 | Logs API | ✅ Completada | 100% |
 | 13 | Logs Screen | ⏳ Pendiente | 0% |
 | 14 | Settings + Health Check | ⏳ Pendiente | 0% |
 | 15 | SSE Streaming (Real-time Logs) | ⏳ Pendiente | 0% |
@@ -124,20 +124,20 @@
 ### Fase 11: Applications Screen
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/screens/applications.py con ApplicationsScreen y DataTable | ⏳ Pendiente | M |
-| T2 | Implementar ModalScreen para crear aplicacion y crear API key | ⏳ Pendiente | M |
-| T3 | Implementar key bindings y acciones en ApplicationsScreen | ⏳ Pendiente | S |
-| T4 | Implementar tests/test_applications_screen.py con Textual pilot | ⏳ Pendiente | M |
-| T5 | Actualizar README.md con seccion de Applications Screen | ⏳ Pendiente | S |
-| T6 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/screens/applications.py con ApplicationsScreen y DataTable | ✅ Completada | M |
+| T2 | Implementar ModalScreen para crear aplicacion y crear API key | ✅ Completada | M |
+| T3 | Implementar key bindings y acciones en ApplicationsScreen | ✅ Completada | S |
+| T4 | Implementar tests/test_applications_screen.py con Textual pilot | ✅ Completada | M |
+| T5 | Actualizar README.md con seccion de Applications Screen | ✅ Completada | S |
+| T6 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 12: Logs API
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/api/logs.py con get_logs, get_log_by_id, query_logs | ⏳ Pendiente | M |
-| T2 | Implementar tests/test_logs_api.py con mock_client | ⏳ Pendiente | S |
-| T3 | Actualizar README.md con seccion de Logs API | ⏳ Pendiente | S |
-| T4 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/api/logs.py con get_logs, get_log_by_id, query_logs | ✅ Completada | M |
+| T2 | Implementar tests/test_logs_api.py con mock_client | ✅ Completada | S |
+| T3 | Actualizar README.md con seccion de Logs API | ✅ Completada | S |
+| T4 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 13: Logs Screen
 | Tarea | Descripcion | Estado | Estimacion |
@@ -188,10 +188,11 @@
 - **src/api/client.py**: OnyxLogClient + ApiClientError, cliente HTTP base con manejo de errores
 - **src/api/auth.py**: Funciones register() y login() para autenticacion
 - **src/api/applications.py**: CRUD de aplicaciones y gestion de API keys (Phase 10)
+- **src/api/logs.py**: Log retrieval and querying with get_logs(), get_log_by_id(), query_logs() (Phase 12)
 - **src/db.py**: SQLite local con aiosqlite para almacenar API keys (init_db, store_key, get_active_key, list_keys, delete_key, deactivate_key)
 - **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
 - **src/screens/dashboard.py**: DashboardScreen con menu de navegacion, stats overview y key bindings
-- **src/screens/applications.py**: ApplicationsScreen placeholder (Phase 11)
+- **src/screens/applications.py**: ApplicationsScreen completada (Phase 11)
 - **src/screens/logs.py**: LogsScreen placeholder (Phase 13)
 - **src/screens/settings.py**: SettingsScreen placeholder (Phase 14)
 - **src/app.py**: OnyxLogApp con auto-login, ciclo de vida, bindings para quit y composicion de pantallas

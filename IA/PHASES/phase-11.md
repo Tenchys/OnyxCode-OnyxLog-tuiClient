@@ -1,7 +1,7 @@
 # Fase 11: Applications Screen
 
-**Estado**: Pendiente | **Progreso**: 0% | **Fechas**: 2026-04-17
-**Dependencias**: Fase 10 | **Ultima actualizacion**: 2026-04-17
+**Estado**: Completada | **Progreso**: 100% | **Fechas**: 2026-04-17 a 2026-04-18
+**Dependencias**: Fase 10 | **Ultima actualizacion**: 2026-04-18
 
 ## Objetivos
 
@@ -18,7 +18,7 @@
 4. Key bindings: n→new, d→delete, enter→detail, r→refresh
 5. Tests con Textual pilot
 
-## Componentes a Implementar
+## Componentes Implementados
 
 ### 1. src/screens/applications.py — ApplicationsScreen
 - Hereda de `Screen`
@@ -40,7 +40,7 @@
 - Muestra la key generada (solo se muestra una vez)
 - Boton "Close" que cierra el modal
 
-## Tests a Implementar
+## Tests Implementados
 
 **Archivos**: `tests/test_applications_screen.py`
 
@@ -56,13 +56,13 @@
 
 ## Criterios de Completitud
 
-- [ ] ApplicationsScreen se monta y muestra DataTable
-- [ ] Las aplicaciones se cargan y muestran en la tabla
-- [ ] Los modales de crear aplicacion y API key funcionan
-- [ ] Los key bindings funcionan correctamente
-- [ ] `pytest tests/test_applications_screen.py -v` pasa sin errores
+- [x] ApplicationsScreen se monta y muestra DataTable
+- [x] Las aplicaciones se cargan y muestran en la tabla
+- [x] Los modales de crear aplicacion y API key funcionan
+- [x] Los key bindings funcionan correctamente
+- [x] `pytest tests/test_applications_screen.py -v` pasa sin errores
 
-**Progreso**: 0/6 (0%)
+**Progreso**: 6/6 (100%)
 
 ## Tareas
 
@@ -142,3 +142,4 @@ ruff check src/screens/applications.py
 ## Historial
 
 - **2026-04-17**: Fase creada, planificacion inicial completada
+- **2026-04-18**: Fase completada; pantalla, modales, bindings, tests y documentacion cerrados

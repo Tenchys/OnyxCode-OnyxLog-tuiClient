@@ -13,9 +13,9 @@
 | 7 — Login Screen | ✅ Completada | 100% | [phase-7.md](phase-7.md) |
 | 8 — App Shell (OnyxLogApp) | ✅ Completada | 100% | [phase-8.md](phase-8.md) |
 | 9 — Dashboard Screen | ✅ Completada | 100% | [phase-9.md](phase-9.md) |
-| 10 — Applications API | ⏳ Pendiente | 0% | [phase-10.md](phase-10.md) |
-| 11 — Applications Screen | ⏳ Pendiente | 0% | [phase-11.md](phase-11.md) |
-| 12 — Logs API | ⏳ Pendiente | 0% | [phase-12.md](phase-12.md) |
+| 10 — Applications API | ✅ Completada | 100% | [phase-10.md](phase-10.md) |
+| 11 — Applications Screen | ✅ Completada | 100% | [phase-11.md](phase-11.md) |
+| 12 — Logs API | ✅ Completada | 100% | [phase-12.md](phase-12.md) |
 | 13 — Logs Screen | ⏳ Pendiente | 0% | [phase-13.md](phase-13.md) |
 | 14 — Settings + Health Check | ⏳ Pendiente | 0% | [phase-14.md](phase-14.md) |
 | 15 — SSE Streaming (Real-time Logs) | ⏳ Pendiente | 0% | [phase-15.md](phase-15.md) |

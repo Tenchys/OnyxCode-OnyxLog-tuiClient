@@ -273,6 +273,72 @@ print(f"New key: {response.key}")  # Only returned once!
 | `list_app_keys` | `list[ApiKeyRead]` |
 | `create_app_key` | `ApiKeyCreateResponse` (with `key` field) |
 
+## Logs API
+
+The `src/api/logs.py` module provides log retrieval and querying functions.
+
+### Get Logs (Paginated)
+
+```python
+from src.api.logs import get_logs
+from src.api.client import OnyxLogClient
+
+async with OnyxLogClient() as client:
+    client.set_api_key("your-api-key")
+    logs = await get_logs(client, limit=100, offset=0)
+    for log in logs.items:
+        print(f"[{log.level}] {log.message}")
+```
+
+### Get Log by ID
+
+```python
+from src.api.logs import get_log_by_id
+
+log = await get_log_by_id(client, "log-id-here")
+print(f"Log: {log.message}, Level: {log.level}")
+```
+
+### Query Logs with Filters
+
+```python
+from src.api.logs import query_logs
+from src.api.client import OnyxLogClient
+from src.models.schemas import LogQuery
+
+async with OnyxLogClient() as client:
+    client.set_api_key("your-api-key")
+    query = LogQuery(
+        app_id="my-app",
+        level="ERROR",
+        search="failed",
+        limit=50,
+    )
+    result = await query_logs(client, query)
+    for log in result.items:
+        print(f"[{log.level}] {log.message}")
+```
+
+### LogQuery Filters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `app_id` | `str \| None` | Filter by application ID |
+| `level` | `str \| None` | Filter by log level (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
+| `start_time` | `datetime \| None` | Filter logs after this timestamp |
+| `end_time` | `datetime \| None` | Filter logs before this timestamp |
+| `search` | `str \| None` | Full-text search in log message |
+| `limit` | `int` | Max results (default 100, max 1000) |
+| `offset` | `int` | Pagination offset (default 0) |
+
+### Return Values
+
+| Function | Returns |
+|----------|---------|
+| `get_logs` | `PaginatedResponse[LogRead]` |
+| `get_log_by_id` | `LogRead` |
+| `query_logs` | `PaginatedResponse[LogRead]` |
+
 ## Local Database
 
 The TUI stores API keys locally in a SQLite database for convenience and security.
