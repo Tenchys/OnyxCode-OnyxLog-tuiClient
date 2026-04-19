@@ -102,6 +102,19 @@ class TestListApplications:
         assert result.total == 0
         await client.close()
 
+    @pytest.mark.asyncio
+    async def test_list_applications_accepts_plain_list_response(self) -> None:
+        transport = httpx.MockTransport(_make_handler(200, [_app_read_dict()]))
+        client = OnyxLogClient(base_url="http://testserver")
+        client._client = httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        )
+        result = await list_applications(client)
+        assert len(result.items) == 1
+        assert result.total == 1
+        assert result.items[0].app_id == "test-app"
+        await client.close()
+
 
 class TestCreateApplication:
     @pytest.mark.asyncio
@@ -325,6 +338,28 @@ class TestAppKeys:
         with pytest.raises(ApiClientError) as exc_info:
             await create_app_key(client, "test-app", key)
         assert exc_info.value.error_code == "DUPLICATE_ENTRY"
+        await client.close()
+
+    @pytest.mark.asyncio
+    async def test_create_app_key_accepts_api_key_only_response(self) -> None:
+        transport = httpx.MockTransport(
+            _make_handler(
+                200,
+                {
+                    "api_key": "ak_only_value_123",
+                    "created_at": "2026-01-01T00:00:00Z",
+                },
+            )
+        )
+        client = OnyxLogClient(base_url="http://testserver")
+        client._client = httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        )
+        key = ApiKeyCreate(name="Only Value", key_type="application")
+        result = await create_app_key(client, "test-app", key)
+        assert result.key == "ak_only_value_123"
+        assert result.name == "Only Value"
+        assert result.key_type == "application"
         await client.close()
 
 
