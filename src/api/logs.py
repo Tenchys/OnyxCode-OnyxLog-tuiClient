@@ -20,23 +20,37 @@ def _serialize_query(query: LogQuery) -> dict:
 
 
 async def get_logs(
-    client: OnyxLogClient, *, limit: int = 100, offset: int = 0
+    client: OnyxLogClient,
+    *,
+    limit: int = 100,
+    offset: int = 0,
+    api_key: str | None = None,
 ) -> PaginatedResponse[LogRead]:
     data = await client._request(
-        "GET", "/logs", params={"limit": limit, "offset": offset}
+        "GET",
+        "/logs",
+        params={"limit": limit, "offset": offset},
+        api_key=api_key,
     )
     return PaginatedResponse[LogRead](**data)
 
 
-async def get_log_by_id(client: OnyxLogClient, log_id: str) -> LogRead:
-    data = await client._request("GET", f"/logs/{log_id}")
+async def get_log_by_id(
+    client: OnyxLogClient, log_id: str, *, api_key: str | None = None
+) -> LogRead:
+    data = await client._request("GET", f"/logs/{log_id}", api_key=api_key)
     return LogRead(**data)
 
 
 async def query_logs(
-    client: OnyxLogClient, query: LogQuery
+    client: OnyxLogClient, query: LogQuery, *, api_key: str | None = None
 ) -> PaginatedResponse[LogRead]:
-    data = await client._request("POST", "/logs/query", json=_serialize_query(query))
+    data = await client._request(
+        "POST",
+        "/logs/query",
+        json=_serialize_query(query),
+        api_key=api_key,
+    )
     return PaginatedResponse[LogRead](**data)
 
 

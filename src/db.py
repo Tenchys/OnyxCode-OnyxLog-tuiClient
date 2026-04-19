@@ -86,7 +86,9 @@ async def store_key(
         await db.commit()
 
 
-async def get_active_key(server_url: str, db_path: str | None = None) -> dict | None:
+async def get_active_key(
+    server_url: str, db_path: str | None = None, key_type: str | None = None
+) -> dict | None:
     resolved_path = await _get_db_path(db_path)
     async with aiosqlite.connect(resolved_path) as db:
         db.row_factory = aiosqlite.Row
@@ -94,11 +96,17 @@ async def get_active_key(server_url: str, db_path: str | None = None) -> dict | 
             "id, name, key, key_type, role, user_id, app_id, "
             "server_url, created_at, is_active"
         )
-        async with db.execute(
-            f"SELECT {cols} FROM api_keys "
-            f"WHERE server_url = ? AND is_active = 1 LIMIT 1",
-            (server_url,),
-        ) as cursor:
+        query = f"SELECT {cols} FROM api_keys WHERE server_url = ? AND is_active = 1"
+        params: tuple[str, ...]
+        if key_type is not None:
+            query += " AND key_type = ?"
+            params = (server_url, key_type)
+        else:
+            params = (server_url,)
+
+        query += " ORDER BY created_at DESC LIMIT 1"
+
+        async with db.execute(query, params) as cursor:
             row = await cursor.fetchone()
             if row is None:
                 return None

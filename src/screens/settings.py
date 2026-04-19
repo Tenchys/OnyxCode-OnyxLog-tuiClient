@@ -227,7 +227,10 @@ class SettingsScreen(Screen):
             self.run_worker(self._do_logout())
 
     async def _do_logout(self) -> None:
-        active_key = await db.get_active_key(server_url=self.app.settings.onyxlog_url)
+        active_key = await db.get_active_key(
+            server_url=self.app.settings.onyxlog_url,
+            key_type="user",
+        )
         if active_key is not None:
             await db.deactivate_key(active_key["id"])
 

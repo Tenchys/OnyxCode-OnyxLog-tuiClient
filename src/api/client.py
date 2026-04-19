@@ -30,6 +30,10 @@ class OnyxLogClient:
         self._api_key = None
 
     @property
+    def api_key(self) -> str | None:
+        return self._api_key
+
+    @property
     def is_authenticated(self) -> bool:
         return self._api_key is not None
 
@@ -48,9 +52,22 @@ class OnyxLogClient:
         else:
             url = f"{self.BASE_PATH}{path}"
 
+        api_key = kwargs.pop("api_key", None)
+        extra_headers = kwargs.pop("headers", None)
+
+        headers = self._headers.copy()
+        if api_key is not None:
+            if api_key:
+                headers["X-API-Key"] = api_key
+            else:
+                headers.pop("X-API-Key", None)
+
+        if isinstance(extra_headers, dict):
+            headers.update(extra_headers)
+
         try:
             response = await self._client.request(
-                method, url, headers=self._headers, **kwargs
+                method, url, headers=headers, **kwargs
             )
         except httpx.ConnectError:
             raise ApiClientError("CONNECTION_ERROR", 0, "Cannot connect to server")
@@ -60,8 +77,18 @@ class OnyxLogClient:
         if response.status_code >= 400:
             try:
                 data = response.json()
-                error_code = data.get("error_code", "UNKNOWN_ERROR")
-                message = data.get("message", response.text)
+                error_code = data.get("error_code")
+                message = data.get("message")
+
+                detail = data.get("detail")
+                if isinstance(detail, dict):
+                    error_code = error_code or detail.get("error_code")
+                    message = message or detail.get("message")
+
+                if error_code is None:
+                    error_code = "UNKNOWN_ERROR"
+                if message is None:
+                    message = response.text
             except Exception:
                 error_code = "UNKNOWN_ERROR"
                 message = response.text
