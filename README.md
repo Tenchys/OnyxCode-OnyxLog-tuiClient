@@ -590,6 +590,72 @@ After creation:
 - Input is disabled
 - User closes the modal with `Close`
 
+## Logs Screen
+
+The `LogsScreen` provides a real-time log viewer with filtering and search capabilities.
+
+### Table Columns
+
+- Timestamp
+- Level
+- App
+- Message
+
+### Level Coloring
+
+Log levels are color-coded for quick identification:
+
+| Level | Style |
+|-------|-------|
+| DEBUG | dim |
+| INFO | green |
+| WARNING | yellow |
+| ERROR | bold red |
+| CRITICAL | bold red reverse |
+
+### Key Bindings
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `r` | `refresh` | Reload logs from server |
+| `f` | `filter` | Open filter modal |
+| `/` | `search` | Open search modal |
+| `c` | `clear` | Clear all filters and search |
+| `Escape` | `go_back` | Return to previous screen |
+
+### Filter Modal
+
+The filter modal allows filtering logs by:
+
+- **Level**: Select from DEBUG, INFO, WARNING, ERROR, CRITICAL
+- **App ID**: Select from available application IDs
+- **Start Time**: Timestamp in YYYY-MM-DD HH:MM:SS format
+- **End Time**: Timestamp in YYYY-MM-DD HH:MM:SS format
+
+Click "Apply" to apply filters, "Clear" to reset, or "Cancel" to dismiss.
+
+### Search Modal
+
+The search modal performs client-side filtering on the currently loaded logs. Enter a search term and click "Search" to filter log messages, or "Cancel" to dismiss.
+
+### Screen Layout
+
+```
+┌─────────────────────────────────────────────┐
+│                 OnyxLog                      │
+├─────────────────────────────────────────────┤
+│  Logs                                       │
+│                                             │
+│  Timestamp     Level    App    Message      │
+│  2026-04-17    INFO     app1   Logged in    │
+│  2026-04-17    ERROR    app2   Failed to... │
+│  2026-04-17    WARNING  app1   Slow query   │
+│                                             │
+├─────────────────────────────────────────────┤
+│  r: refresh  f: filter  /: search  c: clear │
+└─────────────────────────────────────────────┘
+```
+
 ## Development
 
 Run tests:
