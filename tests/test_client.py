@@ -114,6 +114,22 @@ class TestRequest:
         assert result == {"status": "ok"}
         await client.close()
 
+    async def test_request_allows_api_key_override(self) -> None:
+        async def handler(request: httpx.Request) -> httpx.Response:
+            assert request.headers.get("X-API-Key") == "app-key-123"
+            return httpx.Response(200, json={"ok": True})
+
+        transport = httpx.MockTransport(handler)
+        client = OnyxLogClient(base_url="http://testserver")
+        client.set_api_key("user-key-xyz")
+        client._client = httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        )
+
+        result = await client._request("GET", "/logs", api_key="app-key-123")
+        assert result == {"ok": True}
+        await client.close()
+
 
 class TestErrorResponses:
     async def test_request_401_invalid_credentials(self) -> None:
@@ -158,6 +174,33 @@ class TestErrorResponses:
         except ApiClientError as e:
             assert e.error_code == "INVALID_API_KEY"
             assert e.status_code == 403
+        await client.close()
+
+    async def test_request_reads_error_code_from_detail(self) -> None:
+        transport = httpx.MockTransport(
+            _make_handler(
+                403,
+                {
+                    "detail": {
+                        "error_code": "INVALID_API_KEY",
+                        "message": "Invalid or revoked API key",
+                    }
+                },
+            )
+        )
+        client = OnyxLogClient(base_url="http://testserver")
+        client._client = httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        )
+
+        try:
+            await client._request("GET", "/logs")
+            pytest.fail("Should have raised ApiClientError")
+        except ApiClientError as e:
+            assert e.error_code == "INVALID_API_KEY"
+            assert e.status_code == 403
+            assert e.message == "Invalid or revoked API key"
+
         await client.close()
 
     async def test_request_404_not_found(self) -> None:

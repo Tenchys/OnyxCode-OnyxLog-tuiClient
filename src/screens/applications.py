@@ -14,6 +14,7 @@ from textual.widgets import (
     Static,
 )
 
+from src import db
 from src.api.applications import (
     create_app_key,
     create_application,
@@ -144,6 +145,20 @@ class ApplicationsScreen(Screen):
     async def _handle_key_created(self, result: dict | None) -> None:
         if result is None:
             return
+        try:
+            await db.store_key(
+                id=str(result["id"]),
+                name=str(result["name"]),
+                key=str(result["key"]),
+                key_type="application",
+                server_url=self.app.settings.onyxlog_url,
+                app_id=str(result["app_id"]),
+            )
+        except Exception:
+            self.notify(
+                "API key created, but could not be saved locally",
+                severity="warning",
+            )
         self.notify("API key created successfully", severity="information")
 
 
@@ -260,6 +275,7 @@ class CreateApiKeyModal(ModalScreen[dict | None]):
                 "id": result.id,
                 "key": result.key,
                 "name": result.name,
+                "app_id": app_id,
             }
         except ApiClientError as e:
             self.notify(ERROR_MESSAGES.get(e.error_code, e.message), severity="error")

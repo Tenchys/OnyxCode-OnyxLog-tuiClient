@@ -20,6 +20,7 @@ from textual.widgets import (
 )
 from textual.worker import Worker, WorkerState
 
+from src import db
 from src.api.client import ApiClientError
 from src.api.logs import get_logs, query_logs, stream_logs
 from src.models.schemas import LogQuery, LogRead
@@ -38,6 +39,9 @@ LEVEL_STYLES = {
 
 ERROR_MESSAGES = {
     "CONNECTION_ERROR": "Cannot connect to server. Check URL and try again.",
+    "INVALID_API_KEY": (
+        "Invalid API key. Create an application key in Applications and try again."
+    ),
     "TIMEOUT": "Server is taking too long to respond.",
 }
 
@@ -215,10 +219,24 @@ class LogsScreen(Screen):
         table.loading = True
         try:
             client: OnyxLogClient = self.app.client
+
+            try:
+                app_key = await db.get_active_key(
+                    server_url=self.app.settings.onyxlog_url,
+                    key_type="application",
+                )
+            except Exception:
+                app_key = None
+            app_api_key = app_key["key"] if app_key else None
+
             if self._current_filters:
-                result = await query_logs(client, self._current_filters)
+                result = await query_logs(
+                    client,
+                    self._current_filters,
+                    api_key=app_api_key,
+                )
             else:
-                result = await get_logs(client, limit=200)
+                result = await get_logs(client, limit=200, api_key=app_api_key)
             self._app_ids = sorted({log.app_id for log in result.items})
             logs_to_display = result.items
             if self._search_text:

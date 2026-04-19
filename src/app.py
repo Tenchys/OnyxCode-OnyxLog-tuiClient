@@ -47,7 +47,7 @@ class OnyxLogApp(App):
         await self._try_auto_login()
 
     async def _try_auto_login(self) -> None:
-        active_key = await get_active_key(self.settings.onyxlog_url)
+        active_key = await get_active_key(self.settings.onyxlog_url, key_type="user")
         if active_key is None:
             self.push_screen(LoginScreen())
             return
