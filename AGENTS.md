@@ -77,14 +77,13 @@ ruff format src/ tests/              # Formatear
 
 | Nombre visible | `subagent_type` | Skill asociado | Uso |
 |---|---|---|---|
-| `onyxlog-tui-builder` | `onyxlog-tui-builder` | `onyxlog-tui-builder` | Implementar features del TUI Client |
-| `onyxlog-committer` | `onyxlog-committer` | `onyxlog-commit` | Crear commits semanticos y PRs |
-| `onyxlog-doc-writer` | `onyxlog-doc-writer` | `onyxlog-docs` | Generar o actualizar documentacion |
-| `onyxlog-phase-creator` | `onyxlog-phase-creator` | `onyxlog-phase-creator` | Crear contenido de fases |
-| `onyxlog-phase-writer` | `onyxlog-phase-writer` | `onyxlog-phase-writer` | Escribir fases en el filesystem |
-| `onyxlog-planner` | `onyxlog-planner` | `onyxlog-planner` | Planificar implementacion de fases |
-| `onyxlog-reviewer` | `onyxlog-reviewer` | `onyxlog-review` | Revision de codigo |
+| `onyxlog-tui-builder` | `onyxlog-tui-builder` | `onyxlog-tui-coding` + `onyxlog-tui-screens` + `onyxlog-tui-api-client` + `onyxlog-tui-testing` | Implementar features del TUI Client |
+| `onyxlog-committer` | `onyxlog-committer` | `onyxlog-tui-commit` + `onyxlog-tui-review` | Crear commits semanticos y PRs |
+| `onyxlog-doc-writer` | `onyxlog-doc-writer` | `onyxlog-tui-coding` + `onyxlog-tui-api-client` + `onyxlog-tui-screens` | Generar o actualizar documentacion |
+| `onyxlog-phase-creator` | `onyxlog-phase-creator` | `onyxlog-tui-coding` | Crear contenido de fases |
+| `onyxlog-phase-writer` | `onyxlog-phase-writer` | `onyxlog-tui-coding` | Escribir fases en el filesystem |
+| `onyxlog-planner` | `onyxlog-planner` | `onyxlog-tui-coding` | Planificar implementacion de fases |
+| `onyxlog-reviewer` | `onyxlog-reviewer` | `onyxlog-tui-review` | Revision de codigo |
 | `onyxcode-fixer` | `onyxcode-fixer` | `onyxcode-fixer` | Revisar y corregir inconsistencias entre phase/tarea y codigo |
-| `onyxlog-tui-review` | `onyxlog-tui-review` | `onyxlog-tui-review` | Revision de codigo del TUI Client |
 
 4. Si el nombre visible y el skill asociado difieren, seguir la columna `subagent_type` para la delegacion y usar el skill indicado solo como referencia de contexto.

@@ -12,16 +12,15 @@ metadata:
 from __future__ import annotations
 
 import asyncio
-import sqlite3
-from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
+import aiosqlite
+import httpx
 import pytest
 import pytest_asyncio
-import httpx
 
 from src.app import OnyxLogApp
-from src.db import init_db, store_key
+from src.db import get_active_key, init_db, store_key
 from src.api.client import OnyxLogClient
 
 
@@ -35,13 +34,12 @@ def event_loop():
 @pytest_asyncio.fixture
 async def db_connection(tmp_path):
     db_path = str(tmp_path / "test_keys.db")
-    conn = await aiosqlite.connect(db_path)
-    await init_db(conn)
-    yield conn
-    await conn.close()
+    await init_db(db_path)
+    async with aiosqlite.connect(db_path) as conn:
+        yield conn
 
 
-@pytest_asyncio.fixture
+@pytest.fixture
 def mock_client():
     client = MagicMock(spec=OnyxLogClient)
     client._api_key = "test-key-12345"
@@ -50,7 +48,7 @@ def mock_client():
     return client
 
 
-@pytest_asyncio.fixture
+@pytest.fixture
 def app_instance(mock_client):
     app = OnyxLogApp()
     app.client = mock_client
@@ -78,7 +76,12 @@ class MockTransport(httpx.AsyncBaseTransport):
 
     async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
         key = f"{request.method} {request.url.path}"
-        return self.responses.get(key, httpx.Response(404, json={"error_code": "NOT_FOUND", "message": "Not found"}))
+        return self.responses.get(
+            key,
+            httpx.Response(
+                404, json={"error_code": "NOT_FOUND", "message": "Not found"}
+            ),
+        )
 
 
 @pytest_asyncio.fixture
@@ -86,7 +89,7 @@ async def real_client():
     mock_responses = {
         "POST /api/v1/auth/login": httpx.Response(200, json={
             "user": {"id": "user-1", "username": "testuser", "role": "admin"},
-            "api_key": "test-api-key-12345",
+            "api_key": {"id": "key-1", "key": "test-api-key-12345", "role": "admin"},
         }),
     }
     transport = MockTransport(mock_responses)
@@ -107,18 +110,26 @@ async def real_client():
 from __future__ import annotations
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 from src.api.auth import login
 from src.api.client import ApiClientError
+from src.models.schemas import UserRead, UserWithKey
 
 
 class TestLogin:
     @pytest.mark.asyncio
     async def test_login_success(self, mock_client):
         mock_client._request = AsyncMock(return_value={
-            "user": {"id": "user-1", "username": "testuser", "role": "admin", "is_active": True},
-            "api_key": "test-key-12345",
+            "user": {
+                "id": "11111111-1111-1111-1111-111111111111",
+                "username": "testuser",
+                "email": "test@example.com",
+                "role": "admin",
+                "is_active": True,
+                "created_at": "2026-04-17T00:00:00Z",
+            },
+            "api_key": {"id": "key-1", "key": "test-key-12345", "role": "admin"},
         })
 
         result = await login(mock_client, "testuser", "password123")
@@ -126,7 +137,8 @@ class TestLogin:
         mock_client._request.assert_called_once_with(
             "POST", "/auth/login", json={"username": "testuser", "password": "password123"}
         )
-        assert result.api_key == "test-key-12345"
+        assert isinstance(result, UserWithKey)
+        assert result.get_api_key() == "test-key-12345"
 
     @pytest.mark.asyncio
     async def test_login_invalid_credentials(self, mock_client):
@@ -151,22 +163,31 @@ class TestDatabase:
     @pytest.mark.asyncio
     async def test_store_and_retrieve_key(self, tmp_path):
         db_path = str(tmp_path / "test.db")
-        async with aiosqlite.connect(db_path) as db:
-            await init_db(db)
-            await store_key(db, "key-1", "Test Key", "abc123", "user", "http://localhost:8000", role="admin", user_id="user-1")
+        await init_db(db_path)
+        await store_key(
+            None,
+            "Test Key",
+            "abc123",
+            "user",
+            "http://localhost:8000",
+            role="admin",
+            user_id="user-1",
+            db_path=db_path,
+        )
 
-            key = await get_active_key(db, "http://localhost:8000")
-            assert key is not None
-            assert key["key"] == "abc123"
-            assert key["key_type"] == "user"
+        key = await get_active_key("http://localhost:8000", db_path=db_path)
+        assert key is not None
+        assert key["key"] == "abc123"
+        assert key["key_type"] == "user"
 ```
 
 ## Test de pantallas Textual (pilot)
 
 ```python
-from textual.app import App
 from textual.widgets import Input, Button
 
+from src.screens.dashboard import DashboardScreen
+from src.screens.login import LoginScreen
 
 class TestLoginScreen:
     @pytest.mark.asyncio
@@ -181,8 +202,15 @@ class TestLoginScreen:
     async def test_login_flow_success(self, app_instance):
         mock_client = app_instance.client
         mock_client._request = AsyncMock(return_value={
-            "user": {"id": "u1", "username": "test", "role": "admin"},
-            "api_key": "key-123",
+            "user": {
+                "id": "11111111-1111-1111-1111-111111111111",
+                "username": "test",
+                "email": "test@example.com",
+                "role": "admin",
+                "is_active": True,
+                "created_at": "2026-04-17T00:00:00Z",
+            },
+            "api_key": {"id": "key-123", "key": "key-123", "role": "admin"},
         })
 
         async with app_instance.run_test() as pilot:

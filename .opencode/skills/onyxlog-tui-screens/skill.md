@@ -83,9 +83,9 @@ Metodos de navegacion:
 
 | Metodo | Uso |
 |--------|-----|
-| `app.push_screen(ScreenClass)` | Navegar a una nueva pantalla (se apila sobre la actual) |
+| `app.push_screen(ScreenClass())` | Navegar a una nueva pantalla (se apila sobre la actual) |
 | `app.pop_screen()` | Volver a la pantalla anterior |
-| `app.switch_screen(ScreenClass)` | Reemplazar la pantalla actual (para tabs del dashboard) |
+| `app.switch_screen(ScreenClass())` | Reemplazar la pantalla actual (para tabs o vistas directas) |
 
 Patron en `app.py`:
 
@@ -99,7 +99,7 @@ from src.screens.dashboard import DashboardScreen
 class OnyxLogApp(App):
     CSS_PATH = "styles.tcss"
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.push_screen(LoginScreen())
 ```
 
@@ -225,6 +225,8 @@ Reglas para tablas:
 - `cursor_type="row"` para seleccion por fila
 - `loading = True` durante carga de datos
 - Definir `on_data_table_row_selected` para acciones al seleccionar
+- Limpiar y recargar con `table.clear()` antes de repoblar
+- Usar `self.run_worker(...)` para cargas que consulten `self.app.client`
 
 ## Formularios (Input, Select)
 

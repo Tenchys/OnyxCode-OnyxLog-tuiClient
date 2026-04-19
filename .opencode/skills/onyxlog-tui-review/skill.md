@@ -33,12 +33,14 @@ Verifica la estructura de capas y la separacion de responsabilidades.
 | ARC-06 | WARNING | Cada pantalla esta en su propio archivo bajo `src/screens/` |
 | ARC-07 | WARNING | No hay imports circulares entre modulos |
 | ARC-08 | INFO | Archivos no exceden ~300 lineas (considerar refactor) |
+| ARC-09 | WARNING | `.opencode/agents/` y `.opencode/skills/` no contienen referencias backend heredadas |
 
 Patrones de deteccion:
 - Buscar `httpx.` o `await client._request` directamente en archivos de `screens/`
 - Buscar `from src.screens` en archivos de `api/` o `models/`
 - Buscar `from src.api` en archivos de `models/` o `db.py`
 - Buscar logica de negocio (parseo, calculos complejos) directamente en compose() o action handlers
+- Buscar referencias backend heredadas (`FastAPI`, `SQLAlchemy`, `PostgreSQL`, `Alembic`, `routes/`, `services/`) en `.opencode/agents/` y `.opencode/skills/`
 
 Flujo correcto:
 
@@ -315,6 +317,7 @@ El informe SIEMPRE sigue esta estructura:
 
 ### Modo Full (`--scope full`)
 - Leer todo el directorio `src/` recursivamente
+- Leer `.opencode/agents/` y `.opencode/skills/`
 - Auditar todos los archivos del proyecto
 - Mas lento pero exhaustivo
 
@@ -323,7 +326,7 @@ El informe SIEMPRE sigue esta estructura:
 1. Cargar skills `onyxlog-tui-coding`, `onyxlog-tui-screens`, `onyxlog-tui-api-client`, `onyxlog-tui-testing`
 2. Determinar scope (diff o full)
 3. Si diff: ejecutar `git diff --name-only`, leer archivos cambiados
-4. Si full: leer todo `src/` recursivamente
+4. Si full: leer todo `src/` recursivamente y `.opencode/agents/`, `.opencode/skills/`
 5. Para cada archivo, evaluar contra las 8 categorias
 6. Clasificar cada hallazgo por severidad
 7. Compilar informe con veredicto
