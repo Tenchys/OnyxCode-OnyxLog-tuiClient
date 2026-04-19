@@ -63,6 +63,9 @@ class OnyxLogApp(App):
         if self._client is not None:
             await self._client.close()
 
+    def _reconnect_client(self, new_url: str) -> None:
+        self._client = None
+
     def action_quit(self) -> None:
         self.exit()
 

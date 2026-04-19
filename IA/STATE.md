@@ -5,9 +5,9 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Ultima Fase Completada**: 13 — Logs Screen
-- **Fase Actual**: 14 — Settings + Health Check
-- **Estado**: ⏳ Pendiente (Fases 1-13 completadas, 14+ pendientes)
+- **Ultima Fase Completada**: 15 — SSE Streaming (Real-time Logs)
+- **Fase Actual**: 16 — CLI + Final Polish
+- **Estado**: 🚧 En Progreso (Fases 1-15 completadas, 16 pendiente)
 
 ## Progreso por Fase
 
@@ -26,8 +26,8 @@
 | 11 | Applications Screen | ✅ Completada | 100% |
 | 12 | Logs API | ✅ Completada | 100% |
 | 13 | Logs Screen | ✅ Completada | 100% |
-| 14 | Settings + Health Check | ⏳ Pendiente | 0% |
-| 15 | SSE Streaming (Real-time Logs) | ⏳ Pendiente | 0% |
+| 14 | Settings + Health Check | ✅ Completada | 100% |
+| 15 | SSE Streaming (Real-time Logs) | ✅ Completada | 100% |
 | 16 | CLI + Final Polish | ⏳ Pendiente | 0% |
 
 ## Tareas por Fase
@@ -154,23 +154,23 @@
 ### Fase 14: Settings + Health Check
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/screens/settings.py con SettingsScreen | ⏳ Pendiente | M |
-| T2 | Implementar indicador visual de health check | ⏳ Pendiente | S |
-| T3 | Implementar lista de API keys guardadas | ⏳ Pendiente | S |
-| T4 | Implementar flujo de logout | ⏳ Pendiente | S |
-| T5 | Implementar tests/test_settings_screen.py con Textual pilot | ⏳ Pendiente | M |
-| T6 | Actualizar README.md con seccion de Settings | ⏳ Pendiente | S |
-| T7 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/screens/settings.py con SettingsScreen | ✅ Completada | M |
+| T2 | Implementar indicador visual de health check | ✅ Completada | S |
+| T3 | Implementar lista de API keys guardadas | ✅ Completada | S |
+| T4 | Implementar flujo de logout | ✅ Completada | S |
+| T5 | Implementar tests/test_settings_screen.py con Textual pilot | ✅ Completada | M |
+| T6 | Actualizar README.md con seccion de Settings | ✅ Completada | S |
+| T7 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 15: SSE Streaming (Real-time Logs)
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar stream_logs() en src/api/logs.py | ⏳ Pendiente | M |
-| T2 | Implementar StreamWorker en LogsScreen | ⏳ Pendiente | M |
-| T3 | Implementar toggle de stream y reconexion | ⏳ Pendiente | S |
-| T4 | Implementar tests/test_streaming.py con mock SSE | ⏳ Pendiente | M |
-| T5 | Actualizar README.md con seccion de streaming | ⏳ Pendiente | S |
-| T6 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar stream_logs() en src/api/logs.py | ✅ Completada | M |
+| T2 | Implementar StreamWorker en LogsScreen | ✅ Completada | M |
+| T3 | Implementar toggle de stream y reconexion | ✅ Completada | S |
+| T4 | Implementar tests/test_streaming.py con mock SSE | ✅ Completada | M |
+| T5 | Actualizar README.md con seccion de streaming | ✅ Completada | S |
+| T6 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 16: CLI + Final Polish
 | Tarea | Descripcion | Estado | Estimacion |
@@ -195,7 +195,7 @@
 - **src/screens/dashboard.py**: DashboardScreen con menu de navegacion, stats overview y key bindings
 - **src/screens/applications.py**: ApplicationsScreen completada (Phase 11)
 - **src/screens/logs.py**: LogsScreen con DataTable, coloracion por nivel, FilterModal y SearchModal (Phase 13)
-- **src/screens/settings.py**: SettingsScreen placeholder (Phase 14)
+- **src/screens/settings.py**: SettingsScreen con health check, listado de API keys y logout (Phase 14)
 - **src/app.py**: OnyxLogApp con auto-login, ciclo de vida, bindings para quit y composicion de pantallas
 - **src/styles.tcss**: Estilos base para la aplicacion con tema dark y estilos para componentes
 
