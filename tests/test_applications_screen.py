@@ -175,7 +175,7 @@ class TestApplicationsScreen:
                 delete_mock.assert_awaited_once()
                 call_args = delete_mock.await_args.args
                 assert call_args[0] is mock_app.client
-                assert call_args[1] == "main-app"
+                assert call_args[1] == "550e8400-e29b-41d4-a716-446655440001"
 
     @pytest.mark.asyncio
     async def test_binding_enter_configured_and_detail_action_notifies(
@@ -346,7 +346,7 @@ class TestCreateApiKeyModal:
                 create_key_mock.assert_awaited_once()
                 call_args = create_key_mock.await_args.args
                 assert call_args[0] is mock_app.client
-                assert call_args[1] == "main-app"
+                assert call_args[1] == "550e8400-e29b-41d4-a716-446655440001"
                 key_payload = call_args[2]
                 assert key_payload.name == "Production Key"
 

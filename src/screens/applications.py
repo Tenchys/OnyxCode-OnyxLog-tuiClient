@@ -21,7 +21,7 @@ from src.api.applications import (
     list_applications,
 )
 from src.api.client import ApiClientError
-from src.models.schemas import ApiKeyCreate, AppCreate
+from src.models.schemas import ApiKeyCreate, AppCreate, AppRead
 
 ERROR_MESSAGES = {
     "CONNECTION_ERROR": "Cannot connect to server. Check URL and try again.",
@@ -41,6 +41,10 @@ class ApplicationsScreen(Screen):
         ("r", "refresh", "Refresh"),
         ("k", "create_key", "Key"),
     ]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._loaded_apps: list[AppRead] = []
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -65,8 +69,9 @@ class ApplicationsScreen(Screen):
         try:
             client = self.app.client
             result = await list_applications(client)
+            self._loaded_apps = list(result.items)
             table.clear()
-            for app in result.items:
+            for app in self._loaded_apps:
                 status = "Active" if app.is_active else "Inactive"
                 table.add_row(app.name, app.app_id, app.environment, status)
         except ApiClientError as e:
@@ -79,39 +84,45 @@ class ApplicationsScreen(Screen):
     def action_new_app(self) -> None:
         self.app.push_screen(CreateAppModal(), self._handle_app_created)
 
-    def _get_selected_app_id(self) -> str | None:
+    def _get_selected_app(self) -> AppRead | None:
         table = self.query_one("#apps-table", DataTable)
         if table.row_count == 0:
             return None
         selected_row = table.cursor_row
         if selected_row is None:
             return None
-        row_values = table.get_row_at(selected_row)
-        return str(row_values[1])
+        if selected_row < 0 or selected_row >= len(self._loaded_apps):
+            return None
+        return self._loaded_apps[selected_row]
 
     def action_delete_app(self) -> None:
-        app_id = self._get_selected_app_id()
-        if app_id is None:
+        selected_app = self._get_selected_app()
+        if selected_app is None:
             self.notify("Select an application first", severity="warning")
             return
         self.app.push_screen(ConfirmDeleteModal(), self._handle_delete_confirm)
 
     def action_detail(self) -> None:
-        app_id = self._get_selected_app_id()
-        if app_id is None:
+        selected_app = self._get_selected_app()
+        if selected_app is None:
             self.notify("Select an application first", severity="warning")
             return
-        self.notify(f"Detail view for '{app_id}' coming soon", severity="information")
+        self.notify(
+            f"Detail view for '{selected_app.app_id}' coming soon",
+            severity="information",
+        )
 
     def action_refresh(self) -> None:
         self.run_worker(self._load_applications())
 
     def action_create_key(self) -> None:
-        app_id = self._get_selected_app_id()
-        if app_id is None:
+        selected_app = self._get_selected_app()
+        if selected_app is None:
             self.notify("Select an application first", severity="warning")
             return
-        self.app.push_screen(CreateApiKeyModal(app_id=app_id), self._handle_key_created)
+        self.app.push_screen(
+            CreateApiKeyModal(app_id=str(selected_app.id)), self._handle_key_created
+        )
 
     def _handle_app_created(self, created: bool) -> None:
         if created:
@@ -120,11 +131,11 @@ class ApplicationsScreen(Screen):
     async def _handle_delete_confirm(self, confirmed: bool) -> None:
         if not confirmed:
             return
-        app_id = self._get_selected_app_id()
-        if app_id is None:
+        selected_app = self._get_selected_app()
+        if selected_app is None:
             return
         try:
-            await delete_application(self.app.client, app_id)
+            await delete_application(self.app.client, str(selected_app.id))
             self.notify("Application deleted", severity="information")
             self.run_worker(self._load_applications())
         except ApiClientError as e:
