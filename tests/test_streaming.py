@@ -11,7 +11,7 @@ import pytest
 from textual.app import App
 
 from src.api.client import ApiClientError, OnyxLogClient
-from src.api.logs import stream_logs
+from src.api.logs import _parse_sse_event, stream_logs
 from src.models.schemas import LogRead
 from src.screens.logs import LogsScreen
 
@@ -130,6 +130,49 @@ class TestStreamLogs:
 
         assert exc_info.value.error_code == "CONNECTION_ERROR"
         assert len(client._client.calls) == 3
+
+    def test_parse_sse_event_handles_invalid_inputs(self) -> None:
+        assert _parse_sse_event("heartbeat", ["{}"]) is None
+        assert _parse_sse_event("log", []) is None
+        assert _parse_sse_event("log", ["   "]) is None
+        assert _parse_sse_event("log", ["not-json"]) is None
+        assert _parse_sse_event("log", ['{"message":"missing-fields"}']) is None
+
+    @pytest.mark.asyncio
+    async def test_stream_logs_parses_trailing_event_without_blank_line(self) -> None:
+        client = make_client(
+            [
+                FakeStreamResponse(
+                    [
+                        "event: log",
+                        f"data: {json.dumps(make_log('tail-event'))}",
+                    ]
+                )
+            ]
+        )
+
+        log = await anext(stream_logs(client, max_retries=0))
+        assert log.message == "tail-event"
+
+    @pytest.mark.asyncio
+    async def test_stream_logs_raises_stream_error_on_http_status(self) -> None:
+        client = make_client([FakeStreamResponse([""], status_code=503)])
+
+        with pytest.raises(ApiClientError) as exc_info:
+            await anext(stream_logs(client, max_retries=0))
+
+        assert exc_info.value.error_code == "STREAM_ERROR"
+
+    @pytest.mark.asyncio
+    async def test_stream_logs_raises_stream_error_after_generic_exception(
+        self,
+    ) -> None:
+        client = make_client([RuntimeError("boom")])
+
+        with pytest.raises(ApiClientError) as exc_info:
+            await anext(stream_logs(client, max_retries=0))
+
+        assert exc_info.value.error_code == "STREAM_ERROR"
 
 
 class LogsTestApp(App):

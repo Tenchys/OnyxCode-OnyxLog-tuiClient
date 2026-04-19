@@ -24,7 +24,7 @@ dev = [
 ]
 
 [project.scripts]
-onyxlog-tui = "src.app:main"
+onyxlog-tui = "src.cli:app"
 
 [tool.setuptools]
 packages = ["src", "src.api", "src.models", "src.screens"]
