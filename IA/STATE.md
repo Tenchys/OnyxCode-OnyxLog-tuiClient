@@ -5,8 +5,9 @@
 - **Proyecto**: OnyxLog TUI Client
 - **Stack**: Python 3.11+ / Textual / Rich / httpx / aiosqlite / Pydantic v2
 - **Fecha de Inicio**: 2026-04-17
-- **Fase Actual**: 13 — Logs Screen
-- **Estado**: ✅ Completada (Fases 1-12 completadas, 13+ pendientes)
+- **Ultima Fase Completada**: 13 — Logs Screen
+- **Fase Actual**: 14 — Settings + Health Check
+- **Estado**: ⏳ Pendiente (Fases 1-13 completadas, 14+ pendientes)
 
 ## Progreso por Fase
 
@@ -24,7 +25,7 @@
 | 10 | Applications API | ✅ Completada | 100% |
 | 11 | Applications Screen | ✅ Completada | 100% |
 | 12 | Logs API | ✅ Completada | 100% |
-| 13 | Logs Screen | ⏳ Pendiente | 0% |
+| 13 | Logs Screen | ✅ Completada | 100% |
 | 14 | Settings + Health Check | ⏳ Pendiente | 0% |
 | 15 | SSE Streaming (Real-time Logs) | ⏳ Pendiente | 0% |
 | 16 | CLI + Final Polish | ⏳ Pendiente | 0% |
@@ -142,13 +143,13 @@
 ### Fase 13: Logs Screen
 | Tarea | Descripcion | Estado | Estimacion |
 |-------|-------------|--------|------------|
-| T1 | Implementar src/screens/logs.py con LogsScreen y DataTable | ⏳ Pendiente | M |
-| T2 | Implementar coloracion por nivel de log | ⏳ Pendiente | S |
-| T3 | Implementar FilterModal para filtros interactivos | ⏳ Pendiente | M |
-| T4 | Implementar key bindings y acciones en LogsScreen | ⏳ Pendiente | S |
-| T5 | Implementar tests/test_logs_screen.py con Textual pilot | ⏳ Pendiente | M |
-| T6 | Actualizar README.md con seccion de Logs Screen | ⏳ Pendiente | S |
-| T7 | Actualizar estado del proyecto | ⏳ Pendiente | S |
+| T1 | Implementar src/screens/logs.py con LogsScreen y DataTable | ✅ Completada | M |
+| T2 | Implementar coloracion por nivel de log | ✅ Completada | S |
+| T3 | Implementar FilterModal para filtros interactivos | ✅ Completada | M |
+| T4 | Implementar key bindings y acciones en LogsScreen | ✅ Completada | S |
+| T5 | Implementar tests/test_logs_screen.py con Textual pilot | ✅ Completada | M |
+| T6 | Actualizar README.md con seccion de Logs Screen | ✅ Completada | S |
+| T7 | Actualizar estado del proyecto | ✅ Completada | S |
 
 ### Fase 14: Settings + Health Check
 | Tarea | Descripcion | Estado | Estimacion |
@@ -193,7 +194,7 @@
 - **src/screens/login.py**: LoginScreen con formulario de login/registro, validacion, manejo de errores y navegacion
 - **src/screens/dashboard.py**: DashboardScreen con menu de navegacion, stats overview y key bindings
 - **src/screens/applications.py**: ApplicationsScreen completada (Phase 11)
-- **src/screens/logs.py**: LogsScreen placeholder (Phase 13)
+- **src/screens/logs.py**: LogsScreen con DataTable, coloracion por nivel, FilterModal y SearchModal (Phase 13)
 - **src/screens/settings.py**: SettingsScreen placeholder (Phase 14)
 - **src/app.py**: OnyxLogApp con auto-login, ciclo de vida, bindings para quit y composicion de pantallas
 - **src/styles.tcss**: Estilos base para la aplicacion con tema dark y estilos para componentes
