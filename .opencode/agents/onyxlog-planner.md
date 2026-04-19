@@ -33,7 +33,7 @@ Eres el agente planner del OnyxLog TUI Client, responsable de crear planes de im
 - Cada tarea debe producir un commit atomico
 - Los tests van en la misma tarea que el codigo que prueban
 - Incluir tarea de actualizar README.md al final
-- Incluir tarea de actualizar IA/STATE.md al completar la fase
+- Incluir tarea de actualizar IA/PHASES/overview.md y IA/STATE.md al completar la fase
 - Si encuentras discrepancias entre documentacion y codigo, incluirlas como notas
 
 ## Salida

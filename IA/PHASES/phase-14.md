@@ -111,11 +111,11 @@
 - **Criterios**: README.md incluye documentacion de Settings Screen
 - **Estimacion**: S
 
-### T7: Actualizar estado del proyecto
-- **Descripcion**: Actualizar IA/STATE.md con la Fase 14 completada: pantalla de settings implementada.
-- **Archivos**: `IA/STATE.md`
+### T7: Actualizar estado y seguimiento del proyecto
+- **Descripcion**: Actualizar IA/PHASES/overview.md e IA/STATE.md con la Fase 14 completada: pantalla de settings implementada.
+- **Archivos**: `IA/PHASES/overview.md`, `IA/STATE.md`
 - **Dependencias**: T6
-- **Criterios**: STATE.md refleja el estado actualizado del proyecto
+- **Criterios**: overview.md y STATE.md reflejan el estado actualizado del proyecto
 - **Estimacion**: S
 
 ## Orden de Implementacion

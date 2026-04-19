@@ -101,11 +101,11 @@
 - **Criterios**: README.md es completo y profesional; incluye todas las secciones necesarias
 - **Estimacion**: S
 
-### T6: Actualizar estado del proyecto
-- **Descripcion**: Actualizar IA/STATE.md con la Fase 16 completada: proyecto completo, CLI implementado, cobertura >80%, codigo limpio.
-- **Archivos**: `IA/STATE.md`
+### T6: Actualizar estado y seguimiento del proyecto
+- **Descripcion**: Actualizar IA/PHASES/overview.md e IA/STATE.md con la Fase 16 completada: proyecto completo, CLI implementado, cobertura >80%, codigo limpio.
+- **Archivos**: `IA/PHASES/overview.md`, `IA/STATE.md`
 - **Dependencias**: T5
-- **Criterios**: STATE.md refleja el estado final del proyecto
+- **Criterios**: overview.md y STATE.md reflejan el estado final del proyecto
 - **Estimacion**: S
 
 ## Orden de Implementacion

@@ -99,11 +99,11 @@
 - **Criterios**: README.md incluye documentacion de streaming
 - **Estimacion**: S
 
-### T6: Actualizar estado del proyecto
-- **Descripcion**: Actualizar IA/STATE.md con la Fase 15 completada: streaming SSE implementado.
-- **Archivos**: `IA/STATE.md`
+### T6: Actualizar estado y seguimiento del proyecto
+- **Descripcion**: Actualizar IA/PHASES/overview.md e IA/STATE.md con la Fase 15 completada: streaming SSE implementado.
+- **Archivos**: `IA/PHASES/overview.md`, `IA/STATE.md`
 - **Dependencias**: T5
-- **Criterios**: STATE.md refleja el estado actualizado del proyecto
+- **Criterios**: overview.md y STATE.md reflejan el estado actualizado del proyecto
 - **Estimacion**: S
 
 ## Orden de Implementacion

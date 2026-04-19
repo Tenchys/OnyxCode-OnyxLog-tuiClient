@@ -43,7 +43,7 @@ Eres el agente phase-creator del OnyxLog TUI Client, responsable de crear nuevas
 - Cada tarea debe producir un commit atomico
 - Los tests van en la misma tarea que el codigo que prueban
 - Incluir tarea de actualizar README.md como penultima
-- Incluir tarea de actualizar IA/STATE.md como ultima
+- Incluir tarea de actualizar IA/PHASES/overview.md y IA/STATE.md como ultimas, en ese orden
 - Si encuentras discrepancias entre documentacion y codigo, incluirlas como notas
 - Verificar siempre el estado real del codigo vs la documentacion
 
