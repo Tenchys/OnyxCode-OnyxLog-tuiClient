@@ -20,6 +20,18 @@ With custom server URL:
 onyxlog-tui --url http://host:8000
 ```
 
+Show version:
+
+```bash
+onyxlog-tui --version
+```
+
+Enable debug logging:
+
+```bash
+onyxlog-tui --debug
+```
+
 ## Configuration
 
 The OnyxLog TUI Client uses a priority-based configuration system:
