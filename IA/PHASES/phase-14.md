@@ -1,7 +1,7 @@
 # Fase 14: Settings + Health Check
 
-**Estado**: Pendiente | **Progreso**: 0% | **Fechas**: 2026-04-17
-**Dependencias**: Fase 11, Fase 13 | **Ultima actualizacion**: 2026-04-17
+**Estado**: Completada | **Progreso**: 100% | **Fechas**: 2026-04-17 - 2026-04-19
+**Dependencias**: Fase 11, Fase 13 | **Ultima actualizacion**: 2026-04-19
 
 ## Objetivos
 
@@ -59,13 +59,13 @@
 
 ## Criterios de Completitud
 
-- [ ] SettingsScreen se monta y muestra todas las secciones
-- [ ] El indicador de health check funciona correctamente
-- [ ] La lista de API keys se muestra y permite eliminar
-- [ ] El flujo de logout funciona correctamente
-- [ ] `pytest tests/test_settings_screen.py -v` pasa sin errores
+- [x] SettingsScreen se monta y muestra todas las secciones
+- [x] El indicador de health check funciona correctamente
+- [x] La lista de API keys se muestra y permite eliminar
+- [x] El flujo de logout funciona correctamente
+- [x] `pytest tests/test_settings_screen.py -v` pasa sin errores
 
-**Progreso**: 0/7 (0%)
+**Progreso**: 7/7 (100%)
 
 ## Tareas
 

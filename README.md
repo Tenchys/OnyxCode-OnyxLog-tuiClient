@@ -339,6 +339,17 @@ async with OnyxLogClient() as client:
 | `get_log_by_id` | `LogRead` |
 | `query_logs` | `PaginatedResponse[LogRead]` |
 
+### Real-time Streaming
+
+```python
+from src.api.logs import stream_logs
+
+async for log in stream_logs(client):
+    print(f"[{log.level}] {log.message}")
+```
+
+`stream_logs()` consume `GET /api/v1/logs/stream` como SSE, parsea eventos `log` y reconecta automaticamente con backoff exponencial.
+
 ## Local Database
 
 The TUI stores API keys locally in a SQLite database for convenience and security.
@@ -618,10 +629,20 @@ Log levels are color-coded for quick identification:
 | Key | Action | Description |
 |-----|--------|-------------|
 | `r` | `refresh` | Reload logs from server |
+| `t` | `toggle_stream` | Toggle real-time streaming |
 | `f` | `filter` | Open filter modal |
 | `/` | `search` | Open search modal |
 | `c` | `clear` | Clear all filters and search |
 | `Escape` | `go_back` | Return to previous screen |
+
+### Real-time Streaming
+
+The logs screen can stream new entries in real time over SSE.
+
+- Streaming updates are inserted at the top of the table.
+- The UI shows `Streaming`, `Reconnecting...`, or `Disconnected` status.
+- Streaming can be toggled with `t`.
+- The stream automatically reconnects on temporary loss of connectivity.
 
 ### Filter Modal
 

@@ -16,6 +16,9 @@ class MockApp(App):
     def __init__(self) -> None:
         super().__init__()
         self.client = MagicMock()
+        self.client.health_check = AsyncMock(
+            return_value=MagicMock(status="ok", version="1.0.0")
+        )
         self.settings = MagicMock()
         self.settings.onyxlog_url = "http://localhost:8000"
 

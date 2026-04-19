@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -17,10 +18,11 @@ from textual.widgets import (
     Select,
     Static,
 )
+from textual.worker import Worker, WorkerState
 
 from src.api.client import ApiClientError
-from src.api.logs import get_logs, query_logs
-from src.models.schemas import LogQuery
+from src.api.logs import get_logs, query_logs, stream_logs
+from src.models.schemas import LogQuery, LogRead
 
 if TYPE_CHECKING:
     from src.api.client import OnyxLogClient
@@ -39,6 +41,12 @@ ERROR_MESSAGES = {
     "TIMEOUT": "Server is taking too long to respond.",
 }
 
+STREAM_STATUS_STYLES = {
+    "Disconnected": "dim",
+    "Streaming": "green",
+    "Reconnecting...": "yellow",
+}
+
 
 class LogsScreen(Screen):
     BINDINGS = [
@@ -48,18 +56,31 @@ class LogsScreen(Screen):
         ("f", "filter", "Filter"),
         ("/", "search", "Search"),
         ("c", "clear", "Clear"),
+        ("t", "toggle_stream", "Stream"),
     ]
+
+    MAX_STREAMED_LOGS = 1000
+    MAX_STREAM_RECONNECT_ATTEMPTS = 5
 
     def __init__(self) -> None:
         super().__init__()
         self._current_filters: LogQuery | None = None
         self._search_text: str | None = None
         self._app_ids: list[str] = []
+        self._stream_enabled = False
+        self._stream_worker: Worker | None = None
+        self._stream_status = "Disconnected"
+        self._pending_logs: list[LogRead] = []
+        self._displayed_logs: list[LogRead] = []
 
     def compose(self) -> ComposeResult:
         yield Header()
         yield Container(
-            Static("Logs", id="logs-title", classes="section-title"),
+            Horizontal(
+                Static("Logs", id="logs-title", classes="section-title"),
+                Static(self._stream_status, id="stream-status"),
+                id="logs-header-row",
+            ),
             DataTable(id="logs-table", cursor_type="row"),
             id="logs-container",
         )
@@ -68,7 +89,126 @@ class LogsScreen(Screen):
     async def on_mount(self) -> None:
         table = self.query_one("#logs-table", DataTable)
         table.add_columns("Timestamp", "Level", "App", "Message")
+        self._update_stream_status_display()
         self.run_worker(self._load_logs())
+
+    def _update_stream_status_display(self) -> None:
+        status_widget = self.query_one("#stream-status", Static)
+        style = STREAM_STATUS_STYLES.get(self._stream_status, "dim")
+        status_widget.update(f"[{style}]{self._stream_status}[/{style}]")
+
+    def action_toggle_stream(self) -> None:
+        if self._stream_enabled:
+            self._stop_stream()
+        else:
+            self._start_stream()
+
+    def _start_stream(self) -> None:
+        if self._stream_worker is not None:
+            return
+        self._stream_enabled = True
+        self._stream_status = "Streaming"
+        self._update_stream_status_display()
+        self._stream_worker = self.run_worker(
+            self._stream_logs_worker(), name="stream_logs", exclusive=True
+        )
+        self.notify("Stream started", severity="information")
+
+    def _stop_stream(self) -> None:
+        self._stream_enabled = False
+        self._stream_status = "Disconnected"
+        self._update_stream_status_display()
+        if self._stream_worker is not None:
+            self._stream_worker.cancel()
+            self._stream_worker = None
+        self.notify("Stream stopped", severity="information")
+
+    async def _stream_logs_worker(self) -> None:
+        client: OnyxLogClient = self.app.client
+        levels = None
+        if self._current_filters and self._current_filters.level:
+            levels = [self._current_filters.level]
+
+        reconnect_attempts = 0
+
+        while self._stream_enabled:
+            try:
+                async for log in stream_logs(client, levels=levels, max_retries=0):
+                    if not self._stream_enabled:
+                        break
+
+                    reconnect_attempts = 0
+                    if self._stream_status != "Streaming":
+                        self._stream_status = "Streaming"
+                        self._update_stream_status_display()
+
+                    self._pending_logs.insert(0, log)
+                    if len(self._pending_logs) > self.MAX_STREAMED_LOGS:
+                        self._pending_logs.pop()
+
+                    self._displayed_logs.insert(0, log)
+                    if len(self._displayed_logs) > self.MAX_STREAMED_LOGS:
+                        self._displayed_logs.pop()
+
+                    self._add_streamed_log_to_table()
+
+                if not self._stream_enabled:
+                    break
+
+                reconnect_attempts += 1
+                if reconnect_attempts > self.MAX_STREAM_RECONNECT_ATTEMPTS:
+                    self.notify(
+                        "Streaming reconnection limit reached", severity="error"
+                    )
+                    break
+
+                self._stream_status = "Reconnecting..."
+                self._update_stream_status_display()
+                await asyncio.sleep(2 ** (reconnect_attempts - 1))
+            except ApiClientError as e:
+                if not self._stream_enabled:
+                    break
+
+                reconnect_attempts += 1
+                if reconnect_attempts > self.MAX_STREAM_RECONNECT_ATTEMPTS:
+                    self.notify(
+                        ERROR_MESSAGES.get(e.error_code, e.message), severity="error"
+                    )
+                    break
+
+                self._stream_status = "Reconnecting..."
+                self._update_stream_status_display()
+                self.notify("Stream disconnected, reconnecting...", severity="warning")
+                await asyncio.sleep(2 ** (reconnect_attempts - 1))
+            except Exception:
+                if not self._stream_enabled:
+                    break
+
+                reconnect_attempts += 1
+                if reconnect_attempts > self.MAX_STREAM_RECONNECT_ATTEMPTS:
+                    self.notify("Stream connection lost", severity="error")
+                    break
+
+                self._stream_status = "Reconnecting..."
+                self._update_stream_status_display()
+                await asyncio.sleep(2 ** (reconnect_attempts - 1))
+
+        self._stream_enabled = False
+        self._stream_worker = None
+        self._stream_status = "Disconnected"
+        self._update_stream_status_display()
+
+    def _add_streamed_log_to_table(self) -> None:
+        table = self.query_one("#logs-table", DataTable)
+        self._populate_table(table, self._displayed_logs)
+
+    async def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
+        if event.worker.name == "stream_logs":
+            if event.state == WorkerState.ERROR:
+                self._stream_status = "Disconnected"
+                self._update_stream_status_display()
+                self._stream_enabled = False
+                self._stream_worker = None
 
     async def _load_logs(self) -> None:
         table = self.query_one("#logs-table", DataTable)
@@ -87,6 +227,7 @@ class LogsScreen(Screen):
                     for log in result.items
                     if self._search_text in log.message.lower()
                 ]
+            self._displayed_logs = list(logs_to_display)
             self._populate_table(table, logs_to_display)
             count = len(logs_to_display)
             self.notify(f"{count} logs loaded", severity="information")
@@ -97,7 +238,7 @@ class LogsScreen(Screen):
         finally:
             table.loading = False
 
-    def _populate_table(self, table: DataTable, logs: list) -> None:
+    def _populate_table(self, table: DataTable, logs: list[LogRead]) -> None:
         table.clear()
         for log in logs:
             timestamp_str = log.timestamp.strftime("%Y-%m-%d %H:%M:%S")
