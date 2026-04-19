@@ -85,7 +85,7 @@ Move store_key and get_active_key into db.py for reusability.
 | COM-03 | Cambios en DB schema en commit separado de UI changes |
 | COM-04 | Tests en commit separado de la implementacion (excepto TDD) |
 | COM-05 | Cambios de documentacion pueden ir con su feature o en commit propio |
-| COM-06 | Actualizar AGENTS.md o README.md cuando se agregan funcionalidades significativas |
+| COM-06 | Actualizar AGENTS.md, README.md, `.opencode/agents/` o `.opencode/skills/` cuando corresponda |
 | COM-07 | NUNCA commitear `.env`, secrets, API keys, `__pycache__`, `.pyc` |
 | COM-08 | Ejecutar `ruff check src/ tests/` y `ruff format src/ tests/` antes de commitear |
 | COM-09 | Si lint falla, corregir ANTES de commitear |
@@ -93,16 +93,17 @@ Move store_key and get_active_key into db.py for reusability.
 
 ## Regla de Documentacion
 
-Antes de hacer commit, verificar si algun cambio requiere actualizar AGENTS.md:
+Antes de hacer commit, verificar si algun cambio requiere actualizar documentacion operativa:
 
 | Cambio | Accion |
 |--------|--------|
-| Nueva pantalla o screen | Actualizar tabla de arquitectura en AGENTS.md |
-| Nuevo endpoint en api/ | Actualizar tabla API Reference en AGENTS.md |
+| Nueva pantalla o screen | Actualizar README.md y, si aplica, AGENTS.md |
+| Nuevo endpoint en api/ | Actualizar README.md, docs y referencias de skills |
 | Nuevo schema o modelo | Verificar que este en models/schemas.py |
 | Nuevo error_code | Actualizar tabla de codigos de error |
 | Cambio en config | Verificar variables en config.py |
-| Cambio en DB schema | Actualizar CREATE TABLE en AGENTS.md |
+| Cambio en DB schema | Actualizar README.md, AGENTS.md y skills relacionadas |
+| Cambio en agentes o skills | Actualizar `.opencode/agents/` o `.opencode/skills/` |
 
 ## Flujo de Creacion de Commit
 
@@ -162,7 +163,7 @@ Patrones **permitidos**:
 6. **Compilar descripcion** usando el template de PR
 7. **Crear branch** con formato: `<type>/<scope>-<short-description>`
 8. **Push**: `git push -u origin <branch>`
-9. **Crear PR** con `gh pr create`
+9. **Crear PR** con `gh pr create` usando el label que mejor corresponda al tipo del cambio
 10. Retornar URL del PR al usuario
 
 ### Nombres de Branches
@@ -187,6 +188,22 @@ chore/deps-update
 | `docs` | Documentacion |
 | `testing` | Tests |
 | `chore` | Mantenimiento |
+
+Mapeo sugerido:
+- `feat` -> `feature`
+- `fix` -> `bugfix`
+- `refactor` -> `refactor`
+- `docs` -> `docs`
+- `test` -> `testing`
+- `chore`, `perf`, `ci`, `style` -> `chore`
+
+Mapeo sugerido:
+- `feat` -> `feature`
+- `fix` -> `bugfix`
+- `refactor` -> `refactor`
+- `docs` -> `docs`
+- `test` -> `testing`
+- `chore`, `perf`, `ci`, `style` -> `chore`
 
 ## Template de Descripcion de PR
 

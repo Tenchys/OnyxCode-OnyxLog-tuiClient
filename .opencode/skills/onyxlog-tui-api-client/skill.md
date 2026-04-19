@@ -107,8 +107,8 @@ from __future__ import annotations
 from src.models.schemas import AppRead, AppCreate, PaginatedResponse
 
 
-async def list_applications(client: OnyxLogClient, page: int = 1, page_size: int = 50) -> PaginatedResponse[AppRead]:
-    data = await client._request("GET", "/applications", params={"page": page, "page_size": page_size})
+async def list_applications(client: OnyxLogClient, limit: int = 50, offset: int = 0) -> PaginatedResponse[AppRead]:
+    data = await client._request("GET", "/applications", params={"limit": limit, "offset": offset})
     return PaginatedResponse[AppRead](**data)
 
 
@@ -117,8 +117,28 @@ async def create_application(client: OnyxLogClient, app: AppCreate) -> AppRead:
     return AppRead(**data)
 
 
+async def get_application(client: OnyxLogClient, app_id: str) -> AppRead:
+    data = await client._request("GET", f"/applications/{app_id}")
+    return AppRead(**data)
+
+
+async def update_application(client: OnyxLogClient, app_id: str, app: AppUpdate) -> AppRead:
+    data = await client._request("PUT", f"/applications/{app_id}", json=app.model_dump(exclude_none=True))
+    return AppRead(**data)
+
+
 async def delete_application(client: OnyxLogClient, app_id: str) -> None:
     await client._request("DELETE", f"/applications/{app_id}")
+
+
+async def list_app_keys(client: OnyxLogClient, app_id: str) -> list[ApiKeyRead]:
+    data = await client._request("GET", f"/applications/{app_id}/keys")
+    return [ApiKeyRead(**item) for item in data]
+
+
+async def create_app_key(client: OnyxLogClient, app_id: str, key: ApiKeyCreate) -> ApiKeyCreateResponse:
+    data = await client._request("POST", f"/applications/{app_id}/keys", json=key.model_dump())
+    return ApiKeyCreateResponse(**data)
 ```
 
 ### logs.py — Consulta de logs
@@ -129,14 +149,19 @@ from __future__ import annotations
 from src.models.schemas import LogRead, LogQuery, PaginatedResponse
 
 
-async def get_logs(client: OnyxLogClient, query: LogQuery) -> PaginatedResponse[LogRead]:
-    data = await client._request("POST", "/logs/query", json=query.model_dump(exclude_none=True))
+async def get_logs(client: OnyxLogClient, limit: int = 100, offset: int = 0) -> PaginatedResponse[LogRead]:
+    data = await client._request("GET", "/logs", params={"limit": limit, "offset": offset})
     return PaginatedResponse[LogRead](**data)
 
 
 async def get_log_by_id(client: OnyxLogClient, log_id: str) -> LogRead:
     data = await client._request("GET", f"/logs/{log_id}")
     return LogRead(**data)
+
+
+async def query_logs(client: OnyxLogClient, query: LogQuery) -> PaginatedResponse[LogRead]:
+    data = await client._request("POST", "/logs/query", json=query.model_dump(exclude_none=True))
+    return PaginatedResponse[LogRead](**data)
 ```
 
 ## SSE Streaming (logs en tiempo real)
@@ -206,6 +231,15 @@ async def health_check(client: OnyxLogClient) -> dict:
 ```
 
 Nota: El endpoint `/health` no usa el prefijo `/api/v1` ni requiere API key. Implementar soporte en `_request` con parametro `skip_prefix=True` o metodo separado.
+
+## Stats overview
+
+```python
+async def get_stats_overview(client: OnyxLogClient) -> dict:
+    return await client._request("GET", "/stats/overview")
+```
+
+Nota: `DashboardScreen` consume este endpoint de forma directa mientras no exista un helper dedicado.
 
 ## Patron de reintentos
 

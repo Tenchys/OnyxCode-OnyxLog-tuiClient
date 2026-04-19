@@ -49,12 +49,16 @@ Flujo de datos: **Screen → API Client → OnyxLog Server → Response → Scre
 
 | Capa       | Archivo           | Clase/Funcion                     |
 |------------|-------------------|-----------------------------------|
-| screens/   | `login.py`        | `LoginScreen(App)`                |
-| screens/   | `dashboard.py`   | `DashboardScreen(App)`            |
-| screens/   | `logs.py`         | `LogsScreen(App)`                 |
+| screens/   | `login.py`        | `LoginScreen(Screen)`             |
+| screens/   | `dashboard.py`    | `DashboardScreen(Screen)`         |
+| screens/   | `applications.py` | `ApplicationsScreen(Screen)`      |
+| screens/   | `logs.py`         | `LogsScreen(Screen)`              |
+| screens/   | `settings.py`     | `SettingsScreen(Screen)`          |
 | api/       | `client.py`       | `OnyxLogClient` (clase)           |
 | api/       | `auth.py`         | `register()`, `login()`           |
-| models/    | `schemas.py`      | `User`, `App`, `Log`, `ApiKey`    |
+| api/       | `applications.py`  | `list_applications()`, `create_application()` |
+| api/       | `logs.py`         | `get_logs()`, `get_log_by_id()`, `query_logs()` |
+| models/    | `schemas.py`      | `UserRead`, `AppRead`, `LogRead`, `ApiKeyRead` |
 | db.py      | -                 | `init_db()`, `store_key()`, `get_active_key()` |
 | config.py  | -                 | `Settings(BaseSettings)`           |
 
@@ -100,8 +104,10 @@ Codigos de error del servidor OnyxLog:
 - Usar `pydantic-settings` con `BaseSettings` en `src/config.py`
 - Variables de entorno con prefijo `ONYXLOG_` (ej: `ONYXLOG_URL`)
 - Archivo config: `~/.onyxlog/config.toml`
-- Prioridad: CLI flag > env var > config file > default
+- Prioridad: env var > config file > default
 - Default: `http://localhost:8000`
+- Campos: `onyxlog_url`, `db_path`, `config_path`
+- Helpers: `save_to_file()`, `load_from_file()`, `resolved_url`
 
 ## Snippet: Pantalla minima
 
@@ -172,12 +178,15 @@ class AppRead(BaseModel):
 from __future__ import annotations
 
 import aiosqlite
+from datetime import UTC, datetime
+from uuid import uuid4
 
 DB_PATH = "~/.onyxlog/keys.db"
 
 
-async def init_db() -> None:
-    async with aiosqlite.connect(DB_PATH) as db:
+async def init_db(db_path: str | None = None) -> None:
+    path = db_path or DB_PATH
+    async with aiosqlite.connect(path) as db:
         await db.execute("""
             CREATE TABLE IF NOT EXISTS api_keys (
                 id TEXT PRIMARY KEY,
@@ -196,14 +205,23 @@ async def init_db() -> None:
 
 
 async def store_key(
-    id: str, name: str, key: str, key_type: str,
-    server_url: str, role: str | None = None,
-    user_id: str | None = None, app_id: str | None = None,
+    id: str | None,
+    name: str,
+    key: str,
+    key_type: str,
+    server_url: str,
+    role: str | None = None,
+    user_id: str | None = None,
+    app_id: str | None = None,
+    db_path: str | None = None,
 ) -> None:
-    async with aiosqlite.connect(DB_PATH) as db:
+    path = db_path or DB_PATH
+    key_id = id or str(uuid4())
+    created_at = datetime.now(UTC).isoformat()
+    async with aiosqlite.connect(path) as db:
         await db.execute(
-            "INSERT INTO api_keys (id, name, key, key_type, role, user_id, app_id, server_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))",
-            (id, name, key, key_type, role, user_id, app_id, server_url),
+            "INSERT INTO api_keys (id, name, key, key_type, role, user_id, app_id, server_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (key_id, name, key, key_type, role, user_id, app_id, server_url, created_at),
         )
         await db.commit()
 ```
