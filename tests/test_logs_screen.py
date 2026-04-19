@@ -7,6 +7,7 @@ from uuid import UUID
 import pytest
 from textual.app import App
 from textual.widgets import Button, DataTable, Input, Select
+from textual.worker import WorkerState
 
 from src.api.client import ApiClientError
 from src.models.schemas import LogQuery, LogRead
@@ -315,6 +316,127 @@ class TestSearchModal:
             cancel_btn = mock_app.screen.query_one("#cancel-btn", Button)
             cancel_btn.press()
             await pilot.pause()
+
+    @pytest.mark.asyncio
+    async def test_search_modal_submitted_input_triggers_search(self, mock_app):
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            await pilot.press("/")
+            await pilot.pause()
+            modal = mock_app.screen
+            assert isinstance(modal, SearchModal)
+            inp = modal.query_one("#search-input", Input)
+            inp.value = "query text"
+            await pilot.press("enter")
+            await pilot.pause()
+
+
+class TestLogsScreenInternalPaths:
+    def test_start_stream_returns_when_worker_exists(self):
+        screen = LogsScreen()
+        screen._stream_worker = MagicMock()
+        screen.run_worker = MagicMock()
+
+        screen._start_stream()
+
+        screen.run_worker.assert_not_called()
+
+    def test_stop_stream_cancels_existing_worker(self):
+        screen = LogsScreen()
+        worker = MagicMock()
+        screen._stream_worker = worker
+        screen._stream_enabled = True
+        screen._update_stream_status_display = MagicMock()
+        screen.notify = MagicMock()
+
+        screen._stop_stream()
+
+        worker.cancel.assert_called_once()
+        assert screen._stream_worker is None
+        screen.notify.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_worker_state_error_resets_stream_state(self):
+        screen = LogsScreen()
+        screen._stream_enabled = True
+        screen._stream_worker = MagicMock()
+        screen._update_stream_status_display = MagicMock()
+
+        event = MagicMock()
+        event.worker.name = "stream_logs"
+        event.state = WorkerState.ERROR
+
+        await screen.on_worker_state_changed(event)
+
+        assert screen._stream_enabled is False
+        assert screen._stream_worker is None
+        assert screen._stream_status == "Disconnected"
+
+
+class TestFilterModalBranches:
+    @pytest.mark.asyncio
+    async def test_filter_modal_mount_sets_current_values(self, mock_app):
+        filters = LogQuery(
+            level="ERROR",
+            app_id="my-app",
+            start_time=datetime(2026, 4, 1, 0, 0, 0),
+            end_time=datetime(2026, 4, 2, 0, 0, 0),
+        )
+
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            mock_app.push_screen(
+                FilterModal(current_filters=filters, app_ids=["my-app"])
+            )
+            await pilot.pause()
+            modal = mock_app.screen
+            assert isinstance(modal, FilterModal)
+            assert modal.query_one("#level-select", Select).value == "ERROR"
+            assert modal.query_one("#appid-select", Select).value == "my-app"
+            assert modal.query_one("#start-input", Input).value == "2026-04-01 00:00:00"
+            assert modal.query_one("#end-input", Input).value == "2026-04-02 00:00:00"
+
+    def test_filter_modal_invalid_start_time_notifies(self):
+        modal = FilterModal()
+        level_select = MagicMock()
+        level_select.value = Select.BLANK
+        appid_select = MagicMock()
+        appid_select.value = Select.BLANK
+        start_input = MagicMock()
+        start_input.value = "invalid"
+        end_input = MagicMock()
+        end_input.value = ""
+        modal.query_one = MagicMock(
+            side_effect=[level_select, appid_select, start_input, end_input]
+        )
+        modal.notify = MagicMock()
+        modal.dismiss = MagicMock()
+
+        modal._handle_apply()
+
+        modal.notify.assert_called_once()
+        modal.dismiss.assert_not_called()
+
+    def test_filter_modal_invalid_end_time_notifies(self):
+        modal = FilterModal()
+        level_select = MagicMock()
+        level_select.value = Select.BLANK
+        appid_select = MagicMock()
+        appid_select.value = Select.BLANK
+        start_input = MagicMock()
+        start_input.value = "2026-04-01 00:00:00"
+        end_input = MagicMock()
+        end_input.value = "invalid"
+        modal.query_one = MagicMock(
+            side_effect=[level_select, appid_select, start_input, end_input]
+        )
+        modal.notify = MagicMock()
+        modal.dismiss = MagicMock()
+
+        modal._handle_apply()
+
+        modal.notify.assert_called_once()
+        modal.dismiss.assert_not_called()
 
 
 class TestLogsScreenNavigation:

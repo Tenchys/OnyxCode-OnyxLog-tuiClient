@@ -245,6 +245,42 @@ class TestSaveUrl:
             last_notification = notifications[-1]
             assert last_notification.severity == "error"
 
+    @pytest.mark.asyncio
+    async def test_save_url_unchanged_shows_info(self, mock_app):
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            screen = get_screen(mock_app)
+            url_input = screen.query_one("#url-input", Input)
+            url_input.value = "http://localhost:8000"
+
+            save_btn = screen.query_one("#btn-save-url", Button)
+            save_btn.press()
+            await pilot.pause()
+
+            notifications = list(mock_app._notifications)
+            assert len(notifications) > 0
+            assert notifications[-1].severity == "information"
+
+    @pytest.mark.asyncio
+    async def test_save_url_failure_notifies_error(self, mock_app):
+        mock_app.settings.save_to_file = MagicMock(
+            side_effect=RuntimeError("disk error")
+        )
+
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            screen = get_screen(mock_app)
+            url_input = screen.query_one("#url-input", Input)
+            url_input.value = "http://other-server:8000"
+
+            save_btn = screen.query_one("#btn-save-url", Button)
+            save_btn.press()
+            await pilot.pause()
+
+            notifications = list(mock_app._notifications)
+            assert len(notifications) > 0
+            assert notifications[-1].severity == "error"
+
 
 class TestDeleteKey:
     @pytest.mark.asyncio
@@ -263,6 +299,97 @@ class TestDeleteKey:
                 assert len(notifications) > 0
                 last_notification = notifications[-1]
                 assert last_notification.severity == "warning"
+
+    @pytest.mark.asyncio
+    async def test_handle_delete_confirm_runs_worker_when_confirmed(self):
+        screen = SettingsScreen()
+        screen.run_worker = MagicMock(side_effect=lambda coro: coro.close())
+
+        screen._handle_delete_confirm(True)
+        screen.run_worker.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_delete_selected_key_out_of_bounds_no_delete(self):
+        mock_app = MockApp()
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            screen = get_screen(mock_app)
+
+            table = MagicMock()
+            table.cursor_row = 5
+            screen.query_one = MagicMock(return_value=table)
+
+            with (
+                patch(
+                    "src.screens.settings.db.list_keys",
+                    new_callable=AsyncMock,
+                    return_value=[{"id": "key-1", "name": "k1", "is_active": 0}],
+                ) as mock_list_keys,
+                patch(
+                    "src.screens.settings.db.delete_key", new_callable=AsyncMock
+                ) as mock_delete,
+            ):
+                await screen._delete_selected_key()
+
+                mock_list_keys.assert_called_once()
+                mock_delete.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_delete_selected_key_non_active_refreshes_keys(self):
+        mock_app = MockApp()
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            screen = get_screen(mock_app)
+
+            table = MagicMock()
+            table.cursor_row = 0
+            screen.query_one = MagicMock(return_value=table)
+            screen.notify = MagicMock()
+            screen.run_worker = MagicMock(side_effect=lambda coro: coro.close())
+
+            with (
+                patch(
+                    "src.screens.settings.db.list_keys",
+                    new_callable=AsyncMock,
+                    return_value=[{"id": "key-1", "name": "k1", "is_active": 0}],
+                ),
+                patch(
+                    "src.screens.settings.db.delete_key", new_callable=AsyncMock
+                ) as mock_delete,
+            ):
+                await screen._delete_selected_key()
+
+                mock_delete.assert_called_once_with("key-1")
+                screen.run_worker.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_delete_selected_key_active_triggers_logout(self):
+        mock_app = MockApp()
+        async with mock_app.run_test() as pilot:
+            await pilot.pause()
+            screen = get_screen(mock_app)
+
+            table = MagicMock()
+            table.cursor_row = 0
+            screen.query_one = MagicMock(return_value=table)
+            screen.notify = MagicMock()
+            screen._do_logout = AsyncMock()
+            screen.run_worker = MagicMock(side_effect=lambda coro: coro.close())
+
+            with (
+                patch(
+                    "src.screens.settings.db.list_keys",
+                    new_callable=AsyncMock,
+                    return_value=[{"id": "key-1", "name": "k1", "is_active": 1}],
+                ),
+                patch(
+                    "src.screens.settings.db.delete_key", new_callable=AsyncMock
+                ) as mock_delete,
+            ):
+                await screen._delete_selected_key()
+
+                mock_delete.assert_called_once_with("key-1")
+                screen._do_logout.assert_awaited_once()
 
 
 class TestLogout:
@@ -343,6 +470,38 @@ class TestDeleteKeyConfirmModal:
             await pilot.pause()
             current_screen = test_app.screen
             assert hasattr(current_screen, "query_one")
+
+
+class TestConfirmModals:
+    def test_logout_confirm_modal_confirm_and_cancel(self):
+        modal = LogoutConfirmModal()
+        modal.dismiss = MagicMock()
+
+        confirm_event = MagicMock()
+        confirm_event.button.id = "confirm-btn"
+        modal.on_button_pressed(confirm_event)
+        modal.dismiss.assert_called_once_with(True)
+
+        modal.dismiss.reset_mock()
+        cancel_event = MagicMock()
+        cancel_event.button.id = "cancel-btn"
+        modal.on_button_pressed(cancel_event)
+        modal.dismiss.assert_called_once_with(False)
+
+    def test_delete_key_confirm_modal_confirm_and_cancel(self):
+        modal = DeleteKeyConfirmModal(key_name="test-key")
+        modal.dismiss = MagicMock()
+
+        confirm_event = MagicMock()
+        confirm_event.button.id = "confirm-btn"
+        modal.on_button_pressed(confirm_event)
+        modal.dismiss.assert_called_once_with(True)
+
+        modal.dismiss.reset_mock()
+        cancel_event = MagicMock()
+        cancel_event.button.id = "cancel-btn"
+        modal.on_button_pressed(cancel_event)
+        modal.dismiss.assert_called_once_with(False)
 
 
 class TestNavigation:
